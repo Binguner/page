@@ -1,0 +1,947 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="最近共享单车很火，我打开 ofo 的 App，发现 ofo 用的是高德的题图，于是做了个地图的应用练手。～～">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高德地图 API 的简易使用">
+<meta property="og:url" content="http://yoursite.com/2017/04/08/高德地图-API-的简易使用/index.html">
+<meta property="og:site_name" content="Binguner&#39;s Blog">
+<meta property="og:description" content="最近共享单车很火，我打开 ofo 的 App，发现 ofo 用的是高德的题图，于是做了个地图的应用练手。～～">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5264123-ce881f54c53d0ee6.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5264123-f43127e7455f7bdb.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5264123-d3efacdc53e24c3f.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5264123-8d2242d1a3ba6204.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5264123-0a3852b6649c1ef3.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5264123-fcdc924fec986c21.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5264123-9aa38208a535f95d.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-12-29T09:15:58.406Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高德地图 API 的简易使用">
+<meta name="twitter:description" content="最近共享单车很火，我打开 ofo 的 App，发现 ofo 用的是高德的题图，于是做了个地图的应用练手。～～">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/5264123-ce881f54c53d0ee6.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/08/高德地图-API-的简易使用/"/>
+
+
+
+
+
+  <title> 高德地图 API 的简易使用 | Binguner's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Binguner's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Welcome :)</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/08/高德地图-API-的简易使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Binguner">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/flash_heander.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Binguner's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                高德地图 API 的简易使用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-08T10:46:21+08:00">
+                2017-04-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/04/08/高德地图-API-的简易使用/" class="leancloud_visitors" data-flag-title="高德地图 API 的简易使用">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  最近共享单车很火，我打开 ofo 的 App，发现 ofo 用的是高德的题图，于是做了个地图的应用练手。～～
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="注册个人开发者"><a href="#注册个人开发者" class="headerlink" title="注册个人开发者"></a>注册个人开发者</h1><p>到 <a href="http://lbs.amap.com/" target="_blank" rel="noopener">http://lbs.amap.com/</a> 注册个人开发者，创建新应用，申请 Key<br>SHA1获取方式：<br>双击 <strong>signingReport</strong>，<img src="http://upload-images.jianshu.io/upload_images/5264123-ce881f54c53d0ee6.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="获取 SHA1"><br>在 Android Studio 下方控制台中找到 SHAI<br><img src="http://upload-images.jianshu.io/upload_images/5264123-f43127e7455f7bdb.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="获取 SHA1 "><br>在这里为了方便可以将 发布版安全码 和 测试版安全码 填同一个 SHA1。<br>获取 <strong>PackageName</strong><br>在 build.gradle 中找到 applicationId 即是 包名</p>
+<hr>
+<h1 id="下载相应的-SDK"><a href="#下载相应的-SDK" class="headerlink" title="下载相应的 SDK"></a>下载相应的 SDK</h1><p><img src="http://upload-images.jianshu.io/upload_images/5264123-d3efacdc53e24c3f.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="下载SDK"><br>在这里只下载 地图SDK 和 定位SDK<br>在相关下载页面中均选择<strong>一键下载</strong></p>
+<hr>
+<h1 id="下载好压缩包后-解压所需文件"><a href="#下载好压缩包后-解压所需文件" class="headerlink" title="下载好压缩包后 解压所需文件"></a>下载好压缩包后 解压所需文件</h1><p><img src="http://upload-images.jianshu.io/upload_images/5264123-8d2242d1a3ba6204.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="下载好的压缩包"></p>
+<p>定位SDK 只需要解压其中的一个 jar 包<br><img src="http://upload-images.jianshu.io/upload_images/5264123-0a3852b6649c1ef3.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="定位SDK中所需的文件"><br>地图SDK 需解压以下文件<br><img src="http://upload-images.jianshu.io/upload_images/5264123-fcdc924fec986c21.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="定位SDK中所需要的文件"></p>
+<p>将解压好的两个 jar 包导入工程目录下的 libs 目录下，选择 add as library 或 Sync Now<br>在 main 目录下创建文件夹 <strong>jniLibs</strong> (如果有就不需要创建了)，将以下文件导入文件夹中</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a><img src="http://upload-images.jianshu.io/upload_images/5264123-9aa38208a535f95d.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="需要导入 jniLibs 的文件"></h2><h1 id="配置-AndroidManifest-xml"><a href="#配置-AndroidManifest-xml" class="headerlink" title="配置 AndroidManifest.xml"></a>配置 AndroidManifest.xml</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_COARSE_LOCATION"</span>/&gt;</span>   <span class="comment">&lt;!--用于网络定位--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_FINE_LOCATION"</span> /&gt;</span>  <span class="comment">&lt;!--用于 GPS 定位--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_NETWORK_STATE"</span>/&gt;</span>   <span class="comment">&lt;!--用于获取运营商信息，用于支持提供运营商信息相关的接口--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_WIFI_STATE"</span>/&gt;</span>  <span class="comment">&lt;!--用于访问wifi网络信息，wifi信息会用于进行网络定位--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.CHANGE_WIFI_STATE"</span>/&gt;</span>  <span class="comment">&lt;!--用于获取wifi的获取权限，wifi信息会用来进行网络定位--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.INTERNET"</span>/&gt;</span><span class="comment">&lt;!--允许程序打开网络套接字--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.READ_PHONE_STATE"</span>/&gt;</span>   <span class="comment">&lt;!-- 用于读取手机当前的状态 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.WRITE_EXTERNAL_STORAGE"</span>/&gt;</span>     <span class="comment">&lt;!--用于写入缓存数据到扩展存储卡--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"</span>/&gt;</span><span class="comment">&lt;!--用于申请调用A-GPS模块--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.BLUETOOTH"</span>/&gt;</span> <span class="comment">&lt;!-- 用于申请获取蓝牙信息进行室内定位--&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后，设置刚获取的 Key<br>在 application 标签中加入如下内容：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta-data</span> <span class="attr">android:name</span>=<span class="string">"com.amap.api.v2.apikey"</span> <span class="attr">android:value</span>=<span class="string">"key"</span>&gt;</span></span><br><span class="line">//开发者申请的key  </span><br><span class="line"><span class="tag">&lt;/<span class="name">meta-data</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="初始化地图容器"><a href="#初始化地图容器" class="headerlink" title="初始化地图容器"></a>初始化地图容器</h1><p>MapView 是 AndroidView 类的一个子类， 用于在 AndroidView 中放置地图。 MapView 是地图容器。用 MapView 加载地图的方法与 Android 提供的其他 View 一样.<br>在布局xml文件中添加地图控件：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">com.amap.api.maps.MapView</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">"@+id/map"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>在 MainActivity 中声明一个 MapView<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MapView mMapView = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure></p>
+<p>在 onCreate 中实例化：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mMapView = (MapView) findViewById(R.id.map);</span><br><span class="line"> <span class="comment">//在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图</span></span><br><span class="line">mMapView.onCreate(savedInstanceState);</span><br></pre></td></tr></table></figure></p>
+<p>完善地图生命周期：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onDestroy();</span><br><span class="line">    <span class="comment">//在activity执行onDestroy时执行mMapView.onDestroy()，销毁地图</span></span><br><span class="line">    mMapView.onDestroy();</span><br><span class="line">  &#125;</span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onResume</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onResume();</span><br><span class="line">    <span class="comment">//在activity执行onResume时执行mMapView.onResume ()，重新绘制加载地图</span></span><br><span class="line">    mMapView.onResume();</span><br><span class="line">    &#125;</span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPause</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onPause();</span><br><span class="line">    <span class="comment">//在activity执行onPause时执行mMapView.onPause ()，暂停地图的绘制</span></span><br><span class="line">    mMapView.onPause();</span><br><span class="line">    &#125;</span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onSaveInstanceState</span><span class="params">(Bundle outState)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onSaveInstanceState(outState);</span><br><span class="line">    <span class="comment">//在activity执行onSaveInstanceState时执行mMapView.onSaveInstanceState (outState)，保存地图当前的状态</span></span><br><span class="line">    mMapView.onSaveInstanceState(outState);</span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>显示地图<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化地图控制器对象</span></span><br><span class="line">AMap aMap;</span><br><span class="line"><span class="keyword">if</span> (aMap == <span class="keyword">null</span>) &#123;</span><br><span class="line">    aMap = mapView.getMap();        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h1 id="显示定位蓝点"><a href="#显示定位蓝点" class="headerlink" title="显示定位蓝点"></a>显示定位蓝点</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">MyLocationStyle myLocationStyle;</span><br><span class="line">myLocationStyle = <span class="keyword">new</span> MyLocationStyle();<span class="comment">//初始化定位蓝点样式类</span></span><br><span class="line">myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);<span class="comment">//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。</span></span><br><span class="line">myLocationStyle.interval(<span class="number">2000</span>); <span class="comment">//设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//MyLocationStyle myLocationIcon(BitmapDescriptor myLocationIcon);//设置定位蓝点的icon图标方法，需要用到BitmapDescriptor类对象作为参数。</span></span><br><span class="line"><span class="function">MyLocationStyle <span class="title">strokeColor</span><span class="params">(<span class="number">0</span>)</span></span>;<span class="comment">//设置定位蓝点精度圆圈的边框颜色的方法。</span></span><br><span class="line"><span class="function">MyLocationStyle <span class="title">radiusFillColor</span><span class="params">(<span class="number">0</span>)</span></span>;<span class="comment">//设置定位蓝点精度圆圈的填充颜色的方法。</span></span><br><span class="line"></span><br><span class="line">aMap.setMyLocationStyle(myLocationStyle);<span class="comment">//设置定位蓝点的Style</span></span><br><span class="line">        <span class="comment">//aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。</span></span><br><span class="line">aMap.setMyLocationEnabled(<span class="keyword">true</span>);<span class="comment">// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。</span></span><br><span class="line">        <span class="comment">//将定位风格设置传给地图控制器</span></span><br><span class="line">aMap.setMyLocationStyle(myLocationStyle);aMap.setMyLocationEnabled(<span class="keyword">true</span>);</span><br><span class="line">aMap.moveCamera(CameraUpdateFactory.zoomTo(<span class="number">17</span>)); <span class="comment">//设置缩放级别为17</span></span><br><span class="line">aMap.showIndoorMap(<span class="keyword">true</span>); <span class="comment">//显示室内地图</span></span><br></pre></td></tr></table></figure>
+<p><strong>定位蓝点提供5种模式：</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_SHOW);<span class="comment">//只定位一次。</span></span><br><span class="line">myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE) ;<span class="comment">//定位一次，且将视角移动到地图中心点。</span></span><br><span class="line">myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW) ;<span class="comment">//连续定位、且将视角移动到地图中心点，定位蓝点跟随设备移动。（1秒1次定位）</span></span><br><span class="line">myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE);<span class="comment">//连续定位、且将视角移动到地图中心点，地图依照设备方向旋转，定位点会跟随设备移动。（1秒1次定位）</span></span><br><span class="line">myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);<span class="comment">//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。</span></span><br></pre></td></tr></table></figure></p>
+<p>设置定位刷新事件<br>new 一个 Button，并添加刷新事件：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Refresh</span><span class="params">()</span></span>&#123;</span><br><span class="line">        mLocationClient = <span class="keyword">new</span> AMapLocationClient(getApplicationContext());</span><br><span class="line">        mLocationOption = <span class="keyword">new</span> AMapLocationClientOption();</span><br><span class="line">        mLocationOption.setOnceLocation(<span class="keyword">true</span>); <span class="comment">//设置为单次定位模式</span></span><br><span class="line">        mLocationOption.setNeedAddress(<span class="keyword">true</span>); <span class="comment">//返回地址描述</span></span><br><span class="line">        mLocationOption.setHttpTimeOut(<span class="number">10000</span>); <span class="comment">//设置请求超时时间</span></span><br><span class="line">        mLocationClient.setLocationOption(mLocationOption);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//设置定位回调监听器</span></span><br><span class="line">        mLocationClient.setLocationListener(<span class="keyword">new</span> AMapLocationListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onLocationChanged</span><span class="params">(AMapLocation aMapLocation)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(aMapLocation != <span class="keyword">null</span>)&#123;</span><br><span class="line">                    LatLng latLng = <span class="keyword">new</span> LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());</span><br><span class="line">                    <span class="keyword">if</span>(locationMarker == <span class="keyword">null</span>)&#123;</span><br><span class="line">                        locationMarker = aMap.addMarker(<span class="keyword">new</span> MarkerOptions()</span><br><span class="line">                                .position(latLng)</span><br><span class="line">                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.center_marker2)));</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        locationMarker.setPosition(latLng);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">//将标记移动到定位点，使用animateCamera就有动画效果</span></span><br><span class="line">                    aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, <span class="number">17</span>));</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    Toast.makeText(MainActivity.<span class="keyword">this</span>, <span class="string">"定位失败"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>设置地图内的指南针或者缩放按钮等</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> UiSettings mUiSettings;</span><br><span class="line">mUiSettings = aMap.getUiSettings();</span><br><span class="line">mUiSettings.setZoomControlsEnabled(<span class="keyword">false</span>); <span class="comment">//缩放按钮的显示与隐藏</span></span><br><span class="line">mUiSettings.setCompassEnabled(<span class="keyword">false</span>); <span class="comment">//指南针的显示与隐藏</span></span><br><span class="line">mUiSettings.setScaleControlsEnabled(<span class="keyword">false</span>); <span class="comment">//比例尺的显示与隐藏</span></span><br><span class="line">mUiSettings.setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_LEFT); <span class="comment">//         设置LOGO位置</span></span><br><span class="line">mUiSettings.setRotateGesturesEnabled(<span class="keyword">false</span>); <span class="comment">//禁止旋转</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/15/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/08/GridView-加载网络图片-点击-Item-传递图片到另一个-Activity/" rel="prev" title="GridView 加载网络图片 | 点击 Item 传递图片到另一个 Activity">
+                GridView 加载网络图片 | 点击 Item 传递图片到另一个 Activity <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjYwOC85MTY5"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/flash_heander.png"
+               alt="Binguner" />
+          <p class="site-author-name" itemprop="name">Binguner</p>
+           
+              <p class="site-description motion-element" itemprop="description">I can't go on, I will go on.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Nenguou" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/7ac4634329c3" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-book"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/babyzzs?is_hot=1" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/nenguou/" target="_blank" title="Instgram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instgram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/nenguou04/" target="_blank" title="CSDN">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#注册个人开发者"><span class="nav-number">1.</span> <span class="nav-text">注册个人开发者</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下载相应的-SDK"><span class="nav-number">2.</span> <span class="nav-text">下载相应的 SDK</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下载好压缩包后-解压所需文件"><span class="nav-number">3.</span> <span class="nav-text">下载好压缩包后 解压所需文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number">3.1.</span> <span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置-AndroidManifest-xml"><span class="nav-number">4.</span> <span class="nav-text">配置 AndroidManifest.xml</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#初始化地图容器"><span class="nav-number">5.</span> <span class="nav-text">初始化地图容器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#显示定位蓝点"><span class="nav-number">6.</span> <span class="nav-text">显示定位蓝点</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Binguner</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("XEsyf2VW631h7oC9pp8YgIqx-gzGzoHsz", "fgXU53MWdplW2nkVyOJHws9H");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
