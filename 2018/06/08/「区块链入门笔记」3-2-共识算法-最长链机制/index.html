@@ -87,21 +87,22 @@
 
 
 
-<meta name="description" content="总结了一下区块链中有关工作量证明的相关概念和知识点。">
+<meta name="description" content="总结了一下区块链中有关最长链机制的相关概念和知识点。">
 <meta name="keywords" content="区块链">
 <meta property="og:type" content="article">
-<meta property="og:title" content="「区块链入门笔记」3.1 共识算法-工作量证明">
-<meta property="og:url" content="http://yoursite.com/2018/05/30/「区块链入门笔记」3-1-共识算法-工作量证明/index.html">
+<meta property="og:title" content="「区块链入门笔记」3.2 共识算法-最长链机制">
+<meta property="og:url" content="http://yoursite.com/2018/06/08/「区块链入门笔记」3-2-共识算法-最长链机制/index.html">
 <meta property="og:site_name" content="Binguner&#39;s Blog">
-<meta property="og:description" content="总结了一下区块链中有关工作量证明的相关概念和知识点。">
+<meta property="og:description" content="总结了一下区块链中有关最长链机制的相关概念和知识点。">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/5/18/163708e09a802e1f?ivImgItem/2/w/1080/format/webp">
-<meta property="og:image" content="file:///storage/emulated/0/Note/images/1526699332810.png">
-<meta property="og:updated_time" content="2018-05-30T06:57:58.510Z">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/5/21/163807428ce9ba0b?ivImgItem/2/w/1080/format/webp">
+<meta property="og:image" content="file:///storage/emulated/0/Note/images/1526865680445.png">
+<meta property="og:image" content="file:///storage/emulated/0/Note/images/1526865783250.png">
+<meta property="og:updated_time" content="2018-06-08T02:22:48.577Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="「区块链入门笔记」3.1 共识算法-工作量证明">
-<meta name="twitter:description" content="总结了一下区块链中有关工作量证明的相关概念和知识点。">
-<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2018/5/18/163708e09a802e1f?ivImgItem/2/w/1080/format/webp">
+<meta name="twitter:title" content="「区块链入门笔记」3.2 共识算法-最长链机制">
+<meta name="twitter:description" content="总结了一下区块链中有关最长链机制的相关概念和知识点。">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2018/5/21/163807428ce9ba0b?ivImgItem/2/w/1080/format/webp">
 
 
 
@@ -129,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/30/「区块链入门笔记」3-1-共识算法-工作量证明/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/06/08/「区块链入门笔记」3-2-共识算法-最长链机制/"/>
 
 
 
 
 
-  <title> 「区块链入门笔记」3.1 共识算法-工作量证明 | Binguner's Blog </title>
+  <title> 「区块链入门笔记」3.2 共识算法-最长链机制 | Binguner's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -274,7 +275,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/30/「区块链入门笔记」3-1-共识算法-工作量证明/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/08/「区块链入门笔记」3-2-共识算法-最长链机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Binguner">
@@ -295,7 +296,7 @@
             
             
               
-                「区块链入门笔记」3.1 共识算法-工作量证明
+                「区块链入门笔记」3.2 共识算法-最长链机制
               
             
           </h1>
@@ -310,8 +311,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-30T14:48:30+08:00">
-                2018-05-30
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-08T10:21:06+08:00">
+                2018-06-08
               </time>
             
 
@@ -350,7 +351,7 @@
 
           
           
-             <span id="/2018/05/30/「区块链入门笔记」3-1-共识算法-工作量证明/" class="leancloud_visitors" data-flag-title="「区块链入门笔记」3.1 共识算法-工作量证明">
+             <span id="/2018/06/08/「区块链入门笔记」3-2-共识算法-最长链机制/" class="leancloud_visitors" data-flag-title="「区块链入门笔记」3.2 共识算法-最长链机制">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -368,7 +369,7 @@
 
           
               <div class="post-description">
-                  总结了一下区块链中有关工作量证明的相关概念和知识点。
+                  总结了一下区块链中有关最长链机制的相关概念和知识点。
               </div>
           
 
@@ -383,48 +384,63 @@
       
 
       
-        <p>要想整个 P2P 网络维持一份相同的数据，保证每个参与者的公平性，整个体系的所有参与者必须要有统一的协议(<strong>共识算法</strong>)。</p>
-<p>这些协议规则可以划分为两个大的核心：</p>
-<ul>
-<li>工作量证明</li>
-<li>最长链机制</li>
-</ul>
-<p><strong>共识算法的目的</strong>就是保证比特币不停地在最长链条上运转，从而保证整个记账系统的一致性和可靠性。</p>
-<h1 id="1-工作量证明"><a href="#1-工作量证明" class="headerlink" title="1. 工作量证明"></a>1. 工作量证明</h1><p>工作量证明（POW）可简单地理解为一份证明，用来确认你做过一定量的工作。</p>
-<p>监测工作的整个过程是极为低效的，而对工作的结果进行认证来证明完成了相应的工作量，是一种非常高效的方式。</p>
-<p>比如现实生活中的毕业证、驾驶证等，是通过检验结果的方式（通过相关的考试）取得证明。</p>
-<h3 id="1-1-起源"><a href="#1-1-起源" class="headerlink" title="1.1 起源"></a>1.1 起源</h3><p>工作量证明系统，是一种应对服务攻击和其他服务滥用的经济对策。它要求发起者进行<strong>一定量的运算</strong>，消耗计算机一定的时间。</p>
-<p>哈希现金是一种工作量证明机制，<br>Hashcash 在防治垃圾邮件中的应用：在电子邮件的消息头中，增加一个 Hashcash 戳记（Hashcash Stamp）散列值。该散列中包含收件人地址，发送时间，<strong>salt</strong>，该散列值特别之处在于它至少前20位必须是0才是一个合法的Hashcash 戳记。为了得到合法的散列值，发送者必须经过许多次尝试（<strong>改变 salt 值</strong>）才能获得。一旦生成戳记，不希望每一个给我发送邮件的垃圾邮件制造者都能重复使用它。所以，Hashcash 戳记要带一个日期。这样可以指定时间更早的戳记是非法的。另外 Hashcash 的接收端要实现一个 <strong>Double-spending</strong> 数据库，用来记录戳记的历史信息。</p>
-<h3 id="1-2-工作量证明的基本原理"><a href="#1-2-工作量证明的基本原理" class="headerlink" title="1.2 工作量证明的基本原理"></a>1.2 工作量证明的基本原理</h3><p>工作量证明指客户端需要做一定难度的工作得出一个结果，验证方很容易通过验证结果来检查客户端是不是做了相应的工作。</p>
-<p>这种方案的一个核心特征是<strong>不对称性</strong>：工作对于请求方是<strong>适中</strong>的，对于验证方则是<strong>易于验证</strong>的。</p>
-<p>它与验证码的不同：验证码的设计出发点是易于被人类解决而不易被计算机解决。</p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/5/18/163708e09a802e1f?ivImgItem/2/w/1080/format/webp" alt="img"></p>
-<p>例子：给定一个基本的字符串“Hello, world! ”。工作量要求是：可以在这个字符串后面添加一个叫作 nonce（随机数）的整数值，对添加 nonce 后的字符串进行 SHA-256 哈希运算，如果得到的哈希结果（以十六进制的形式表示）以 0000 开头的，则验证通过。为了达到这个工作量证明的目标。计算机需要不停地递增 nonce 值，对得到的新字符串进行 SHA-256 哈希运算。按照这个规则，需要经过 4251 次计算，才能找到恰好前 4 位为 0 的哈希散列。为了增加复杂性：验证方可以要求请求方对多个字符串进行 SHA-256 运算。</p>
-<p>比特币里的工作量证明机制类似，但是更复杂。</p>
-<h3 id="1-3-比特币中的工作量证明"><a href="#1-3-比特币中的工作量证明" class="headerlink" title="1.3 比特币中的工作量证明"></a>1.3 比特币中的工作量证明</h3><p>一个节点若生成一个新的区块并写入区块链，须解出比特币网络给出的工作量证明迷题。</p>
-<p>这道题的3个关键要素是<strong>工作量证明函数</strong>，<strong>区块</strong>，<strong>难度值</strong>。</p>
-<ul>
-<li>工作量证明函数是这道题的计算方法</li>
-<li>区块决定了这道题的输入数据</li>
-<li>难度值决定了解这道题所需要的计算量。</li>
-</ul>
-<p>工作量证明函数是 SHA-256。区块是在工作量证明环节产生的。矿工不停地构造区块数据，检验每次计算出的结果是否满足工作量，从而判断该区块是否符合网络难度。<strong>区块头</strong>即为比特币的工作量证明的输入数据。</p>
-<p><strong>难度值</strong>是矿工们挖矿的重要参考指标，它决定了矿工大约需要经过多少次哈希运算才能产生一个合法的区块。</p>
-<p>比特币的区块大约每 10 分钟生成一个，为了使新区块的产生都基本保持这个速率，难度值必须根据全网算力的变化进行调整。</p>
-<p>每隔 2016 个区块，所有节点都会按统一的公式自动调整难度值。</p>
-<p>公式：新难度值 = 旧难度值*（过去2016个区块花费时长 / 20160 分钟）</p>
-<p>这个公式是由产生最新 2016 个区块的花费时长与期望时长（期望时长为 20160 分钟，即两周，是按每 10 分钟一个区块的产生速率计算出的总时长）比较得出的，根据实际时长与期望时长的比值，进行相应调整。</p>
-<p>工作量证明需要有一个目标值。比特币工作量证明的目标值（Target）的计算公式如下：<br>目标值= 最大目标值/难度值</p>
-<p>最大目标值为一个恒定值：<strong>0x00000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</strong></p>
-<p>比特币工作量证明的达成就是矿工计算出来的区块哈希值<strong>小于</strong>目标值。</p>
-<p>比特币工作量证明的过程简单理解成，通过不停地变换区块头（即尝试不同的nonce 值）并将其作为输入，进行 SHA-256 哈希运算，找出一个有特定格式的哈希值的过程（即要求有一定数量的前导 0 ）。而要求的前导0的个数越多，难度越大。</p>
-<p>可以把比特币矿工解这道工作量证明迷题的步骤大致归纳如下：</p>
+        <p>比特币网络要求所有节点遵循一个协议（共识），即所有保存到本地的区块链必须是被本地节点验证通过的最长链。</p>
+<p>且矿工只有在最长区块链上打造的区块才会获得系统的承认并得到挖矿奖励。</p>
+<p>打包区块获得的奖励在该区块上增加 99 个新区块（100 个确认）之后才能使用。这是保证区块链不发生分裂的重要机制。</p>
+<h1 id="1-算力攻击"><a href="#1-算力攻击" class="headerlink" title="1. 算力攻击"></a>1. 算力攻击</h1><p>比特币设计之初是为了实现一个<strong>点对点的电子现金系统</strong>，而这一系统的难题是如何避免双重支付问题。</p>
+<p>共识算法的目的就是降低双重支付的可能性。在中本聪的白皮书里验证整个比特币体系里发生双重支付的概率：</p>
+<h3 id="1-1-计算"><a href="#1-1-计算" class="headerlink" title="1.1 计算"></a>1.1 计算</h3><p>当一个攻击者生成一条具有替代性的链，并且这条链的延长速度比诚实链的延长速度更快。但也不意味着系统可以任攻击者为所欲为，比如凭空制造币或者拿走从来不属于他的币。</p>
+<p>节点不会接受一个无效的交易，而诚实节点永远不会接受包含无效交易的区块。</p>
+<p>攻击者唯一能尝试的是：改变一笔自己的交易，并尝试把钱从他最近的花费中拿回来。</p>
+<p>诚实链和攻击链之间的竞赛具有<strong>二项随机漫步（Binomial Random walk）</strong>的特点。成功事件意味着诚实链延长了一个区块，领先加 1，失败事件意味着攻击链延长了一个区块，差距减 1。</p>
+<p>攻击者成功填补某一既定差距的概率类似于<strong>赌徒破产问题（Gambler’ s Ruin Problem）</strong>。假定一个赌徒拥有无限的透支信用，然后开始进行潜在次数为无穷的赌博，以试图填补自己的亏空，那么可以计算他补上亏空的概率，也就是该攻击链赶上诚实链的概率，如下所示：</p>
+<p>p=诚实节点制造出下一区块的概率<br>q=攻击者制造出下一个区块的概率<br>qz=攻击者最终消弭了z个区块的落后差距</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/21/163807428ce9ba0b?ivImgItem/2/w/1080/format/webp" alt="img"></p>
+<p>假定 p ＞ q，那么攻击成功的概率就随着攻击者要追上的区块数的增长而呈现指数下降。</p>
+<p>如果攻击者最开始不能获得突破，那么随着他落后的越多，他成功的机会就会变得无限渺茫。</p>
+<p>现在考虑一下，一个新交易的收款人需要等到多长时间，才能足够确信发款人已经不可能改变这笔交易了。假设付款人是一个攻击者，他希望收款人相信他已经付过款了，然后过一段时间将已支付的款项重新发回给自己。付款人希望就算届时收款人会察觉这一点，也于事无补。</p>
+<p>对此，收款人生成一个新的密钥对，然后在交易签署前不久将公钥发送给付款人。可以防止付款人预先准备好一个链，然后持续地对此区块进行运算，直到他的链幸运地超越了诚实链，然后立即执行支付。</p>
+<p>在此情形下，只要交易一发出，攻击者就开始悄悄地准备一条包含了该交易替代版本的平行链条。</p>
+<p>收款人等待交易出现在首个区块中，然后等到 z 个区块连接在其后。此时，他仍不能确切地知道攻击者已经进展了多少个区块，但是假设诚实区块产生一个区块将耗费平均预期时间，那么攻击者的潜在进展就是一个泊松分布，分布的期望为</p>
+<p><img src="file:///storage/emulated/0/Note/images/1526865680445.png" alt="img"></p>
+<p>在此情形下，为了计算攻击者追赶上的概率，将攻击者取得进展区块数量的泊松分布的概率密度乘以在该数量下攻击者依然能够追赶上的概率：</p>
+<p><img src="file:///storage/emulated/0/Note/images/1526865783250.png" alt="img"></p>
+<p>转换为 C 语言代码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> double AttackerSuccessProbability（double q, int z）</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">double</span> p = <span class="number">1.0</span> - q;</span><br><span class="line">    <span class="keyword">double</span> lambda = z ＊ （q / p）;</span><br><span class="line">    <span class="keyword">double</span> sum = <span class="number">1.0</span>;</span><br><span class="line">    <span class="keyword">int</span> i, k;</span><br><span class="line">    <span class="keyword">for</span> （k = <span class="number">0</span>; k ＜= z; k++）</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">double</span> poisson = <span class="built_in">exp</span>（-lambda）;</span><br><span class="line">        <span class="keyword">for</span> （i = <span class="number">1</span>; i ＜= k; i++）</span><br><span class="line">            poisson ＊= lambda / i;</span><br><span class="line">            sum -= poisson ＊ （<span class="number">1</span> - <span class="built_in">pow</span>（q / p, z - k））;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行程序，可以得到如下的概率结果，发现概率对 z 值呈指数下降。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">当q = 0.1时：</span><br><span class="line">z = 0 p = 1.000 000 0</span><br><span class="line">z = 1 p = 0.204 587 3</span><br><span class="line">z = 2 p = 0.050 977 9</span><br><span class="line">z = 3 p = 0.013 172 2</span><br><span class="line">z = 4 p = 0.003 455 2</span><br><span class="line">z = 5 p = 0.000 913 7</span><br><span class="line">z = 6 p = 0.000 242 8</span><br><span class="line">z = 7 p = 0.000 064 7</span><br><span class="line">z = 8 p = 0.000 017 3</span><br><span class="line">z = 9 p = 0.000 004 6</span><br><span class="line">z = 10 p = 0.000 001 2</span><br><span class="line">当q = 0.3时：</span><br><span class="line">z = 0 p = 1.000 000 0</span><br><span class="line">z = 5 p = 0.177 352 3</span><br><span class="line">z = 10 p = 0.041 660 5</span><br><span class="line">z = 15 p = 0.010 100 8</span><br><span class="line">z = 20 p = 0.002 480 4</span><br><span class="line">z = 25 p = 0.000 613 2</span><br><span class="line">z = 30 p = 0.000 152 2</span><br><span class="line">z = 35 p = 0.000 037 9</span><br><span class="line">z = 40 p = 0.000 009 5</span><br><span class="line">z = 45 p = 0.000 002 4</span><br><span class="line">z = 50 p = 0.000 000 6</span><br></pre></td></tr></table></figure>
+<p>求解令 p ＜ 0.1%的 z 值，具体如下。<br>为使 p ＜ 0.001，则</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">q = 0.10 z = 5</span><br><span class="line">q = 0.15 z = 8</span><br><span class="line">q = 0.20 z = 11</span><br><span class="line">q = 0.25 z = 15</span><br><span class="line">q = 0.30 z = 24</span><br><span class="line">q = 0.35 z = 41</span><br><span class="line">q = 0.40 z = 89</span><br><span class="line">q = 0.45 z = 340</span><br></pre></td></tr></table></figure>
+<p>计算结果表明，<strong>随着区块链里区块确认数增加，发生双重支付的概率就越来越低</strong>。</p>
+<p>只有当攻击者的算力占比比较高的时候才有成功的可能，而这个又可以通过增加<strong>确认数</strong>来避免。</p>
+<p>支付方与接收方调整相应的参数作为交易的条件，比如规定 N 个确认才算交易完成，那么区块链的双花问题在这个体系下变得异常困难。</p>
+<h3 id="1-2-51-算力攻击"><a href="#1-2-51-算力攻击" class="headerlink" title="1.2 51% 算力攻击"></a>1.2 51% 算力攻击</h3><p>攻击者拥有超过整个网络一半算力的情况下，就有能力推翻原有已经确认过的交易，使恶意的双花成为可能，称之为 <strong>51%算力攻击</strong>。</p>
+<p>攻击者掌握了全网51%的算力后，发动攻击，则能做到：</p>
 <ol>
-<li>生成 coinbase 交易，并与其他所有准备打包进区块的交易组成<strong>交易列表</strong>，通过 Merkle Tree 算法生成 Merkle Root Hash。</li>
-<li>把 Merkle Root Hash 及其他相关字段组装成区块头，将区块头的 80 字节数据作为工作量证明的输入。</li>
-<li>不停地变更区块头中的随机数（即 nonce 的数值），并对每次变更后的区块头做双重 SHA-256 运算(即 SHA256(SHA 256(Block_Header)))，将结果值哈希反转并与当前网络的目标值对应的十进制字符串做对比，如果小于目标值，则解题成功，工作量证明完成。</li>
+<li><p>控制自己的交易，一笔发给接收者，另一笔发送给自己，让最终发给自己的交易成功而接收者的失效，欺骗接收者，实现双花成功。</p>
+</li>
+<li><p>阻止别人的交易被打包到区块，让交易不能确认。</p>
+</li>
+<li><p>阻止别人生成新的区块，获得区块奖励。</p>
+</li>
 </ol>
-<p><img src="file:///storage/emulated/0/Note/images/1526699332810.png" alt="img"></p>
+<p>不能做的事情如下：</p>
+<ol>
+<li>控制别人发送的交易。</li>
+<li>阻止别人发送交易。</li>
+<li>更改每个区块的奖励数量。</li>
+<li>凭空产生币。</li>
+<li>发送不属于他自己的币。</li>
+</ol>
+<p>攻击者实施 51%算力攻击时唯一对自己有利的就是，<strong>完成对自己交易的双花，骗取交易接收方的利益。</strong></p>
+<p>但攻击者通过攻击来获取利益，需要算力成本，只有当攻击获取的收益大于成本，也大于他诚实工作所获取的收益时，攻击者才会自发动攻击的意图。</p>
+<p><strong>攻击者发起攻击要考虑自身利益，出于较高的成本，算力拥有者都会选择诚实的工作。</strong></p>
+<p>攻击其实依赖于社区的理性选择。</p>
+<p>历史上 Ghash.io 曾经出现过算力接近于 51%的情形，造成了社区恐慌，矿工选择撤离，最终让 Ghash.io 的算力急剧下降。而国内 4 家矿池也曾出现整体算力接近 51%的情形。</p>
+<h1 id="2-共识算法探索"><a href="#2-共识算法探索" class="headerlink" title="2. 共识算法探索"></a>2. 共识算法探索</h1><h3 id="2-1-POW"><a href="#2-1-POW" class="headerlink" title="2.1 POW"></a>2.1 POW</h3><p>Proof of Work，使用的哈希算法原理（SHA-256）接近一个暴力破解的过程。于是市场上出现了 ASIC 矿机，是针对比特币的SHA-256 算法研发的，从而使系统总算力不断上升。但算力的快速上涨既降低了挖矿过程的去中心化，又带来了越来越高的能源消耗。</p>
+<p>于是有了其他竞争币的共识算法的探索。例如莱特币使用 Scrypt 哈希算法，Darkcoin 使用X11算法，Spreadcoin 使用 SpreadX11。</p>
+<h3 id="2-2-POS"><a href="#2-2-POS" class="headerlink" title="2.2 POS"></a>2.2 POS</h3><p>###<br>Proof of Stack（权益证明），不通过竞争性的哈希计算，而是通过节点对<strong>所有权的证明</strong>来达成共识。有人认为，随着区块奖励减少，POW 会导致「公地悲剧」。</p>
+<p>运用 POS 机制的有点点币（PPCoin）。拥有的点点币币龄越高的节点拥有产生新区块的权力。</p>
+<p>币龄：<br>UTXO 所位于区块的高度与当前最长链高度之间的差值决定着该笔 Unspent 币龄的大小，差值越大，代表着币龄越高。该 Unspent 的使用也就代表着币龄的消耗。在 POS 机制里，一笔交易可以消耗的币龄被视为 POS 的一种形式，POS 指的是一种对货币所有权的证明。</p>
 
       
     </div>
@@ -467,8 +483,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/23/「区块链入门笔记」2-区块链组成/" rel="next" title="「区块链入门笔记」2.区块链组成">
-                <i class="fa fa-chevron-left"></i> 「区块链入门笔记」2.区块链组成
+              <a href="/2018/05/30/「区块链入门笔记」3-1-共识算法-工作量证明/" rel="next" title="「区块链入门笔记」3.1 共识算法-工作量证明">
+                <i class="fa fa-chevron-left"></i> 「区块链入门笔记」3.1 共识算法-工作量证明
               </a>
             
           </div>
@@ -476,10 +492,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/06/08/「区块链入门笔记」3-2-共识算法-最长链机制/" rel="prev" title="「区块链入门笔记」3.2 共识算法-最长链机制">
-                「区块链入门笔记」3.2 共识算法-最长链机制 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -657,7 +669,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-工作量证明"><span class="nav-number">1.</span> <span class="nav-text">1. 工作量证明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-起源"><span class="nav-number">1.0.1.</span> <span class="nav-text">1.1 起源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-工作量证明的基本原理"><span class="nav-number">1.0.2.</span> <span class="nav-text">1.2 工作量证明的基本原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-比特币中的工作量证明"><span class="nav-number">1.0.3.</span> <span class="nav-text">1.3 比特币中的工作量证明</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-算力攻击"><span class="nav-number">1.</span> <span class="nav-text">1. 算力攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-计算"><span class="nav-number">1.0.1.</span> <span class="nav-text">1.1 计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-51-算力攻击"><span class="nav-number">1.0.2.</span> <span class="nav-text">1.2 51% 算力攻击</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-共识算法探索"><span class="nav-number">2.</span> <span class="nav-text">2. 共识算法探索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-POW"><span class="nav-number">2.0.1.</span> <span class="nav-text">2.1 POW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-POS"><span class="nav-number">2.0.2.</span> <span class="nav-text">2.2 POS</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
