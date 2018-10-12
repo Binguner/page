@@ -1,0 +1,1064 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,Kotlin," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="大家好，这是「从零开始学 Kotlin 」系列的第二篇， 以后的文章会首发在公众号「Binguner」里。 希望在帮助大学学习 Kotlin 的同时，我也能够巩固和提升自己，一起来开始今天的学习吧！">
+<meta name="keywords" content="Android,Kotlin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从零开始学 Kotlin 之「2」数据类型">
+<meta property="og:url" content="http://yoursite.com/2018/10/12/从零开始学-Kotlin-之「2」数据类型/index.html">
+<meta property="og:site_name" content="Binguner&#39;s Blog">
+<meta property="og:description" content="大家好，这是「从零开始学 Kotlin 」系列的第二篇， 以后的文章会首发在公众号「Binguner」里。 希望在帮助大学学习 Kotlin 的同时，我也能够巩固和提升自己，一起来开始今天的学习吧！">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5264123-87528ec94ba4bd46.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/5264123-4ecd6e740586867f?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-10-12T04:58:19.591Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从零开始学 Kotlin 之「2」数据类型">
+<meta name="twitter:description" content="大家好，这是「从零开始学 Kotlin 」系列的第二篇， 以后的文章会首发在公众号「Binguner」里。 希望在帮助大学学习 Kotlin 的同时，我也能够巩固和提升自己，一起来开始今天的学习吧！">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/5264123-87528ec94ba4bd46.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/12/从零开始学-Kotlin-之「2」数据类型/"/>
+
+
+
+
+
+  <title> 从零开始学 Kotlin 之「2」数据类型 | Binguner's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Binguner's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Welcome :)</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/12/从零开始学-Kotlin-之「2」数据类型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Binguner">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/flash_heander.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Binguner's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                从零开始学 Kotlin 之「2」数据类型
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-12T12:52:45+08:00">
+                2018-10-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/公众号发文/" itemprop="url" rel="index">
+                    <span itemprop="name">公众号发文</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/10/12/从零开始学-Kotlin-之「2」数据类型/" class="leancloud_visitors" data-flag-title="从零开始学 Kotlin 之「2」数据类型">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  大家好，这是「从零开始学 Kotlin 」系列的第二篇， 以后的文章会首发在公众号「Binguner」里。 希望在帮助大学学习 Kotlin 的同时，我也能够巩固和提升自己，一起来开始今天的学习吧！
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>大家好，这里是「从零开始学 Kotlin 之『2 』数据类型」，本文首发于公众号「Binguner」，欢迎前往大家关注。我会每周分享一些关于 Android 和其他方向的技术干货或一些关于认知的文章。学习一门技术最好的方式就是去教会别人，所以，开始今天的学习吧！</p>
+</blockquote>
+<p>Kotlin 中的数据类型有<strong>基本数据类型</strong>和<strong>应用类型</strong>：</p>
+<ul>
+<li>基本数据类型值直接存在了变量</li>
+<li>应用类型的变量存储的是类型所指对象的存储地址</li>
+</ul>
+<p>并且对于基本的数据类型（类似于 int，float 等），Kotlin 不会区分其是数据类型还是包装类型，在运行的时候，数据会用最高效的方式显示。</p>
+<h1 id="01-数字"><a href="#01-数字" class="headerlink" title="01 数字"></a>01 数字</h1><p>Kotlin 提供了与 Java 类似的数字类型</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">类型</th>
+<th style="text-align:center">位宽度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Double</td>
+<td style="text-align:center">64</td>
+</tr>
+<tr>
+<td style="text-align:center">Float</td>
+<td style="text-align:center">32</td>
+</tr>
+<tr>
+<td style="text-align:center">Long</td>
+<td style="text-align:center">64</td>
+</tr>
+<tr>
+<td style="text-align:center">Int</td>
+<td style="text-align:center">32</td>
+</tr>
+<tr>
+<td style="text-align:center">Short</td>
+<td style="text-align:center">16</td>
+</tr>
+<tr>
+<td style="text-align:center">Byte</td>
+<td style="text-align:center">8</td>
+</tr>
+</tbody>
+</table>
+<h3 id="01-1-转换函数"><a href="#01-1-转换函数" class="headerlink" title="01 - 1 转换函数"></a>01 - 1 转换函数</h3><p>但是要注意：Kotlin 中没有隐式转换（就像 Java 中可以把 Int 转换为 Long），想要进行数字转换，需要使用<strong>转换函数</strong>：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> a:<span class="built_in">Byte</span> = <span class="number">1</span></span><br><span class="line"><span class="keyword">val</span> b:<span class="built_in">Int</span> = a  <span class="comment">// 错误，编译器会提示所需类型为 Int，而提供的类型为 Byte</span></span><br><span class="line"><span class="keyword">val</span> c:<span class="built_in">Int</span> = a.toInt()  <span class="comment">// 成功</span></span><br></pre></td></tr></table></figure>
+<p>每种数字类型都支持以下的数字转换方法：</p>
+<ul>
+<li>toByte(): Byte</li>
+<li>toShort(): Short</li>
+<li>toInt(): Int</li>
+<li>toLong(): Long</li>
+<li>toFloat(): Float</li>
+<li>toDouble(): Double</li>
+<li>toChar(): Char</li>
+</ul>
+<h3 id="01-2-装箱和拆箱"><a href="#01-2-装箱和拆箱" class="headerlink" title="01 - 2 装箱和拆箱"></a>01 - 2 装箱和拆箱</h3><p>装箱是指将基本数据类型转换为其对应的包装器类型，<br>拆箱就是将包转器类型转换为基本数据类型。</p>
+<p>在 Java 中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer x = <span class="number">123</span>;  <span class="comment">// 是一个装箱操作</span></span><br><span class="line"><span class="keyword">int</span> y = x;   <span class="comment">// 是一个拆箱操作</span></span><br></pre></td></tr></table></figure>
+<p>而 Kotlin 中如何装箱拆箱呢？</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> i1 = <span class="number">123</span>  <span class="comment">// 拆箱</span></span><br><span class="line"><span class="keyword">val</span> i2:<span class="built_in">Int</span>? = <span class="number">123</span> <span class="comment">// 装箱</span></span><br></pre></td></tr></table></figure>
+<p>想要了解其背后具体原理，可以自己动手将 Kotlin 代码编译成 Java 字节码一探究竟。</p>
+<h1 id="02-字面常量"><a href="#02-字面常量" class="headerlink" title="02 字面常量"></a>02 字面常量</h1><p>为基本数据类型赋值的值称为字面常量。</p>
+<p>Kotlin 中的字面常量有以下三种：</p>
+<ul>
+<li>十进制<br>类似：123，Long 类型的用大写 L 标记：123L</li>
+<li>十六进制<br>类似：0x0F</li>
+<li>二进制<br>类似：0b00001011</li>
+</ul>
+<p>另外，Kotlin 并不支持八进制。但却默认支持 Double 和 Float。<br>例如：123.5，123.4e10，123f，123F 这些在 Kotlin 中都是支持的。</p>
+<p>在声明字面常量时，Kotlin 支持下划线的声明方式，使数字更加的易读：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> oneMillion = <span class="number">1</span>_000_000</span><br><span class="line"><span class="keyword">val</span> creditCardNumber = <span class="number">1234</span>_5678_9012_3456L</span><br><span class="line"><span class="keyword">val</span> socialSecurityNumber = <span class="number">999</span>_99_9999L</span><br><span class="line"><span class="keyword">val</span> hexBytes = <span class="number">0xFF</span>_EC_DE_5E</span><br><span class="line"><span class="keyword">val</span> bytes = <span class="number">0</span>b11010010_01101001_10010100_10010010</span><br></pre></td></tr></table></figure>
+<h1 id="03-字符"><a href="#03-字符" class="headerlink" title="03 字符"></a>03 字符</h1><p>Kotlin 中的字符使用 Char 表示，字符不能直接被当作数字来处理，必须通过 <strong>toInt()</strong> 方法被字符转换为数字类型</p>
+ <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">charToInt</span><span class="params">(c:<span class="type">Char</span>)</span></span>:<span class="built_in">Int</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> c.toInt()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Char 类的字面量用「’ ‘」括起来，支持如下的转义序列：</p>
+<ul>
+<li>\t</li>
+<li>\b</li>
+<li>\n</li>
+<li>\’</li>
+<li>\”</li>
+<li>\</li>
+<li>\$</li>
+</ul>
+<h1 id="04-字符串"><a href="#04-字符串" class="headerlink" title="04 字符串"></a>04 字符串</h1><p>Kotlin 中的字符串和 Java 一样用 String 申明，且不可变的。但是 Kotlin 中的字符串有一些新的特性。</p>
+<h3 id="04-1-新特性"><a href="#04-1-新特性" class="headerlink" title="04 - 1 新特性"></a>04 - 1 新特性</h3><ul>
+<li>通过下标访问字符串中的单个字符</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> str = <span class="string">"Hello world!"</span></span><br><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">0.</span>.str.length<span class="number">-1</span>)&#123;</span><br><span class="line">    print(<span class="string">"<span class="subst">$&#123;str[i]&#125;</span>_"</span>)</span><br><span class="line">&#125;  <span class="comment">// 输出 H_e_l_l_o_ _w_o_r_l_d_!_</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>直接通过「+」操作符连接字符串</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> s = <span class="string">"Hello"</span> + <span class="string">'_'</span></span><br><span class="line">println(s + <span class="string">"World"</span>)</span><br><span class="line"><span class="comment">// 输出 Hello_World</span></span><br></pre></td></tr></table></figure>
+<h3 id="04-2-字符串处理"><a href="#04-2-字符串处理" class="headerlink" title="04 - 2 字符串处理"></a>04 - 2 字符串处理</h3><ul>
+<li>用 split() 分割字符串（split 函数的参数是一个 Regex 对象，写好正则表达式后用 toRegex() 方法即可）</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">println(<span class="string">"123_456_789"</span>.split(<span class="string">"_"</span>.toRegex()))</span><br><span class="line"><span class="comment">// 输出 [123, 456, 789]</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>用其它方法分割字符串<ul>
+<li>substring()  从指定位置开始分割字符串，或者提取指定范围的字符串</li>
+<li>substringBefore() 分割掉指定位置之后的字符串</li>
+<li>substringAfter() 分割掉指定位置之前的字符串</li>
+<li>substringBeforeLast() 分割最后一个指定字符之后的字符串</li>
+<li>substringAfterLast() 分割最后一个指定字符之前的字符串</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> str = <span class="string">"Hello world!"</span></span><br><span class="line">println(<span class="string">"substring1: <span class="subst">$&#123;str.substring(<span class="number">5</span>)&#125;</span>"</span>)</span><br><span class="line">println(<span class="string">"substring2: <span class="subst">$&#123;str.substring(<span class="number">0.</span><span class="number">.4</span>)&#125;</span>"</span>)</span><br><span class="line">println(<span class="string">"substring3: <span class="subst">$&#123;str.substring(<span class="number">6</span>,<span class="number">12</span>)&#125;</span>"</span>)</span><br><span class="line">println(<span class="string">"substringBefore: <span class="subst">$&#123;str.substringBefore(" ")&#125;</span>"</span>)</span><br><span class="line">println(<span class="string">"substringAfter: <span class="subst">$&#123;str.substringAfter(" ")&#125;</span>"</span>)</span><br><span class="line">println(<span class="string">"substringAfter: <span class="subst">$&#123;str.substringBeforeLast(" ")&#125;</span>"</span>)</span><br><span class="line">println(<span class="string">"substringAfterLast: <span class="subst">$&#123;str.substringAfterLast(" ")&#125;</span>"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 运行结果：</span></span><br><span class="line">substring1:  world!</span><br><span class="line">substring2: Hello</span><br><span class="line">substring3: world!</span><br><span class="line">substringBefore: Hello</span><br><span class="line">substringAfter: world!</span><br><span class="line">substringAfter: Hello</span><br><span class="line">substringAfterLast: world!</span><br></pre></td></tr></table></figure>
+<h3 id="04-3-原始字符串"><a href="#04-3-原始字符串" class="headerlink" title="04 - 3 原始字符串"></a>04 - 3 原始字符串</h3><p>原始字符串用前后 3 个引号包围</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> rawStr =</span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        The first line,</span></span><br><span class="line"><span class="string">        the second line,</span></span><br><span class="line"><span class="string">        the third line.</span></span><br><span class="line"><span class="string">        """</span>.trimIndent()  <span class="comment">// 注意：如果「"""」所在行只有空格，这个方法会省略这些空白</span></span><br><span class="line">    println(rawStr)</span><br><span class="line"><span class="comment">// 输出：</span></span><br><span class="line">The first line,</span><br><span class="line">the second line,</span><br><span class="line">the third line.</span><br></pre></td></tr></table></figure>
+<p>原始字符串通常还用 trimMargin() 处理，trimMargin() 的参数是一个边界前缀字符串，默认的参数是「|」，例如下面的例子，每一行的开头是「|」，那么就会以每一行的「|」为输出的开头进行字符输出。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> rawStr = </span><br><span class="line">            <span class="string">"""</span></span><br><span class="line"><span class="string">            |   The first line,</span></span><br><span class="line"><span class="string">        |the second line,</span></span><br><span class="line"><span class="string">        |the third line.</span></span><br><span class="line"><span class="string">    """</span>.trimMargin(<span class="string">"|"</span>)</span><br><span class="line"><span class="comment">// 输出：</span></span><br><span class="line">   The first line,</span><br><span class="line">the second line,</span><br><span class="line">the third line.</span><br></pre></td></tr></table></figure>
+<h1 id="05-布尔类型"><a href="#05-布尔类型" class="headerlink" title="05 布尔类型"></a>05 布尔类型</h1><p>Kotlin 中的布尔类型用 Boolean 表示，它的值有 true 和 false。<br>若需要可空引用时，布尔类型的值会被装箱。</p>
+<p>它支持的运算有：</p>
+<ul>
+<li>|| 短路逻辑或</li>
+<li>&amp;&amp; 短路逻辑与</li>
+<li>! 逻辑非</li>
+</ul>
+<h1 id="06-可空的基本数据类型"><a href="#06-可空的基本数据类型" class="headerlink" title="06 可空的基本数据类型"></a>06 可空的基本数据类型</h1><p>Kotlin 致力于消除 NullPointerException 带来的影响。在 Java 中如果我们尝试引用一个空的对象，就会导致空指针异常，但是在 Kotlin 中则不会。下面，我们来看看 Kotlin 是怎么做到的。</p>
+<p>Kotlin 对可空类型和非空类型做了区分，例如：「Int」不可空，「Int?」可空</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str :String? = <span class="literal">null</span></span><br><span class="line">println(str?.length)</span><br><span class="line"><span class="comment">// 输出 null，而不是报空指针异常</span></span><br></pre></td></tr></table></figure>
+<p>在引用可空类型的时候，为了避免空指针异常，Kotlin 要求必须进行非空检查：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str :String? = <span class="string">"Hellp"</span></span><br><span class="line"><span class="comment">// val length1 = str.length 这样直接引用的时候，编译器会报错</span></span><br><span class="line"><span class="comment">//  Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type String?</span></span><br><span class="line"><span class="comment">// 必须在可空类型上使用可空和非空断言。</span></span><br><span class="line"><span class="keyword">val</span> length = str?.length  <span class="comment">// 此时如果 str 为空，运行返回 null</span></span><br><span class="line"><span class="keyword">val</span> length2 = str!!.length  <span class="comment">// 此时如果 str 为空，运行会抛出异常</span></span><br><span class="line"><span class="comment">// 或者进行类型检查</span></span><br><span class="line"><span class="keyword">val</span> length3 = <span class="keyword">if</span>(str != <span class="literal">null</span>) str.length <span class="keyword">else</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h1 id="07-Kotlin-中的一些其它类型"><a href="#07-Kotlin-中的一些其它类型" class="headerlink" title="07 Kotlin 中的一些其它类型"></a>07 Kotlin 中的一些其它类型</h1><h3 id="07-1-Any、Any"><a href="#07-1-Any、Any" class="headerlink" title="07 - 1 Any、Any?"></a>07 - 1 Any、Any?</h3><p>Any 是 Kotlin 中所有非空类型的超类，相当于 Java 中的 Object。<br>可空类型的超类是 Any?</p>
+<h3 id="07-2-Unit"><a href="#07-2-Unit" class="headerlink" title="07 - 2 Unit"></a>07 - 2 Unit</h3><p>Unit 可以作为函数的返回类型，表示没有返回值或者返回值可以忽略。<br>注意 <strong>Unit 是一个类，并且继承自 Any。</strong></p>
+<p>这是定义它的源代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">object</span> <span class="built_in">Unit</span> &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">toString</span><span class="params">()</span></span> = <span class="string">"kotlin.Unit"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到 Unit 是用 object 定义的单例类型，调用它的 toString() 方法，只会返回 「Kotlin.Unit」。</p>
+<p>并且 <strong>Unit 的返回类型会返回 Unit 类型！！！</strong><br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">test</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"><span class="keyword">val</span> t = test()</span><br><span class="line">println(t::<span class="class"><span class="keyword">class</span>.<span class="title">java</span>)</span></span><br><span class="line"><span class="comment">// 输出 class kotlin.Unit</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="07-3-Nothing"><a href="#07-3-Nothing" class="headerlink" title="07 - 3 Nothing"></a>07 - 3 Nothing</h3><p>Kotlin 中函数返回类型如果用 Nothing 表示，则这个函数<strong>永远不会返回任何类型。</strong></p>
+<p>一些测试函数不会返回任何类型，就需要声明返回类型为 Nothing，它们通常抛出异常来结束运行。</p>
+ <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">test</span><span class="params">(msg:<span class="type">String</span>)</span></span>:<span class="built_in">Nothing</span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> IllegalStateException(msg)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test(<span class="string">"test"</span>)</span><br><span class="line"><span class="comment">// 此时程序会抛出异常：Exception in thread "main" java.lang.IllegalStateException: test</span></span><br></pre></td></tr></table></figure>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>「从零开始学 Kotlin 之『2』数据类型」到这里就结束了。</p>
+<p>一下记住这么多知识点有些困难，所以为了方便大家的记忆与复习，我做了一张思维导图放到下面，大家可以把图片保存下来，有时间便去回顾学到的东西。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5264123-87528ec94ba4bd46.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="从零开始学 Kotlin 之「2」数据类型"></p>
+<p>推荐阅读：</p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/KBvup8SZk5G0KK1XpCvDDg" target="_blank" rel="noopener">从零开始学 Kotlin 之「1」基础篇</a></li>
+</ul>
+<p>欢迎关注本文作者，这个系列的文章会首发在这里：</p>
+<p> <img src="http://upload-images.jianshu.io/upload_images/5264123-4ecd6e740586867f?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="啥都喜欢写的码农"></p>
+<blockquote>
+<p>扫码关注 + 回复「kotlin」，获取我整理的最新版 Kotlin 学习视频。</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/10/奔跑吧！少年/" rel="next" title="奔跑吧！少年">
+                <i class="fa fa-chevron-left"></i> 奔跑吧！少年
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjYwOC85MTY5"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/flash_heander.png"
+               alt="Binguner" />
+          <p class="site-author-name" itemprop="name">Binguner</p>
+           
+              <p class="site-description motion-element" itemprop="description">I can't go on, I will go on.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Nenguou" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/7ac4634329c3" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-book"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/babyzzs?is_hot=1" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/nenguou/" target="_blank" title="Instgram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instgram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/nenguou04/" target="_blank" title="CSDN">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#01-数字"><span class="nav-number"></span> <span class="nav-text">01 数字</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#01-1-转换函数"><span class="nav-number">0.1.</span> <span class="nav-text">01 - 1 转换函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#01-2-装箱和拆箱"><span class="nav-number">0.2.</span> <span class="nav-text">01 - 2 装箱和拆箱</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#02-字面常量"><span class="nav-number"></span> <span class="nav-text">02 字面常量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#03-字符"><span class="nav-number"></span> <span class="nav-text">03 字符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#04-字符串"><span class="nav-number"></span> <span class="nav-text">04 字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#04-1-新特性"><span class="nav-number">0.1.</span> <span class="nav-text">04 - 1 新特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#04-2-字符串处理"><span class="nav-number">0.2.</span> <span class="nav-text">04 - 2 字符串处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#04-3-原始字符串"><span class="nav-number">0.3.</span> <span class="nav-text">04 - 3 原始字符串</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#05-布尔类型"><span class="nav-number"></span> <span class="nav-text">05 布尔类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#06-可空的基本数据类型"><span class="nav-number"></span> <span class="nav-text">06 可空的基本数据类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#07-Kotlin-中的一些其它类型"><span class="nav-number"></span> <span class="nav-text">07 Kotlin 中的一些其它类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#07-1-Any、Any"><span class="nav-number">0.1.</span> <span class="nav-text">07 - 1 Any、Any?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#07-2-Unit"><span class="nav-number">0.2.</span> <span class="nav-text">07 - 2 Unit</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#07-3-Nothing"><span class="nav-number">0.3.</span> <span class="nav-text">07 - 3 Nothing</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后"><span class="nav-number"></span> <span class="nav-text">最后</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Binguner</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("XEsyf2VW631h7oC9pp8YgIqx-gzGzoHsz", "fgXU53MWdplW2nkVyOJHws9H");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
