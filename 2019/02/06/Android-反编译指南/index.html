@@ -433,7 +433,7 @@
 <li><p>在命令行中输入 </p>
 </li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> apktool</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> apktool</span></span><br></pre></td></tr></table></figure>
 <p>如果出现</p>
 <p><img src="https://upload-images.jianshu.io/upload_images/5264123-1d6a677e142f5bb7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <p>则说明安装成功，若没有出现，则需要把「apktool.jar」、「apktool.bat」的路径添加到系统的环境变量中。</p>
@@ -448,11 +448,11 @@
 <li><p>在命令行中 cd 到 <code>/usr/local/bin</code>中然后分别输入下面两条命令</p>
 </li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> chmod a+x d2j_invoke.sh</span><br><span class="line"><span class="meta">$</span> chmod a+x d2j-dex2jar.sh</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> chmod a+x d2j_invoke.sh</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> chmod a+x d2j-dex2jar.sh</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>在命令行中输入</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> apktool</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> apktool</span></span><br></pre></td></tr></table></figure>
 <p>出现</p>
 <p><img src="https://upload-images.jianshu.io/upload_images/5264123-fcf243e68bb2c9be.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <p>则安装成功</p>
@@ -460,13 +460,13 @@
 <li>cd 到 apk 的目录下</li>
 <li>输入</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> apktool d test.apk</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> apktool d test.apk</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://upload-images.jianshu.io/upload_images/5264123-1861649aaf011649.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <p>运行完成后，得到一个包含资源文件和代码的文件：</p>
 <p><img src="https://upload-images.jianshu.io/upload_images/5264123-d79c6e92fd5df16d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <p><strong>注意：</strong><br>此时 dex 文件直接反编译成了 <strong>smali</strong> 文件，而我们需要的是 .dex 文件。</p>
 <p>此时再运行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> apktool d -s -f test.apk</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> apktool d -s -f test.apk</span></span><br></pre></td></tr></table></figure>
 <p>-d 反编译 apk 文件<br>-s 不反编译 dex 文件，而是将其保留<br>-f 如果目标文件夹存在，则删除后重新反编译</p>
 <p>此时得到这样的文件夹：</p>
 <p><img src="https://upload-images.jianshu.io/upload_images/5264123-f61d306d37e92dae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
@@ -484,7 +484,7 @@
 <ul>
 <li>重新打包</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> apktool b b_test -o newtest.apk</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> apktool b b_test -o newtest.apk</span></span><br></pre></td></tr></table></figure>
 <p>-b 是指 build<br>b_test 是刚才反编译出的文件所在的目录<br>-o 用于指定新的文件名称，这里指定为「newtest.apk」</p>
 <p><img src="https://upload-images.jianshu.io/upload_images/5264123-2ff5117b6096d420.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <ul>
@@ -495,7 +495,7 @@
 <ul>
 <li>对新的 Apk 进行签名：</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore testjks -storepass password newtest.apk aliasName</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore testjks -storepass password newtest.apk aliasName</span></span><br></pre></td></tr></table></figure>
 <p><code>签名文件是我自己生成的，没有办法使用 Apk 原来的签名进行签名。</code></p>
 <p><img src="https://upload-images.jianshu.io/upload_images/5264123-129c4c4e5ca47e08.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <p>现在将 Apk 安装一下试试看：</p>
@@ -508,13 +508,13 @@
 <li><p>在命令行中运行：</p>
 </li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sh d2j-dex2jar.sh classes.dex</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sh d2j-dex2jar.sh classes.dex</span></span><br></pre></td></tr></table></figure>
 <p>如果提示：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d2j-dex2jar.sh: line 36: ./d2j_invoke.sh: Permission denied</span><br></pre></td></tr></table></figure>
 <p>执行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo chmod +x d2j_invoke.sh</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo chmod +x d2j_invoke.sh</span></span><br></pre></td></tr></table></figure>
 <p>后再次执行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sh d2j-dex2jar.sh classes.dex</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sh d2j-dex2jar.sh classes.dex</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://upload-images.jianshu.io/upload_images/5264123-23abb167c999657a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <p>运行成功，在当前目录下生成了 <strong>classes-dex2jar.jar</strong> 文件。</p>
 <h1 id="04-jd-gui"><a href="#04-jd-gui" class="headerlink" title="04 jd-gui"></a>04 jd-gui</h1><p>安装好 jd-gui 之后，用其将 <strong>classes-dex2jar.jar</strong> 打开，就可以看到反编译出来的 java 代码了！</p>
@@ -652,7 +652,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -663,7 +663,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -674,7 +674,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
