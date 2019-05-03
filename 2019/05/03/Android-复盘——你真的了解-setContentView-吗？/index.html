@@ -1,0 +1,968 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="从源码分析 setContentView 的执行流程">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 复盘——你真的了解 setContentView 吗？">
+<meta property="og:url" content="http://yoursite.com/2019/05/03/Android-复盘——你真的了解-setContentView-吗？/index.html">
+<meta property="og:site_name" content="Binguner&#39;s Blog">
+<meta property="og:description" content="从源码分析 setContentView 的执行流程">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5264123-aa760b3978ec3d62.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5264123-695d524910fba82a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5264123-1bbcc050b0bdb63c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-05-03T08:39:20.795Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 复盘——你真的了解 setContentView 吗？">
+<meta name="twitter:description" content="从源码分析 setContentView 的执行流程">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/5264123-aa760b3978ec3d62.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/03/Android-复盘——你真的了解-setContentView-吗？/"/>
+
+
+
+
+
+  <title> Android 复盘——你真的了解 setContentView 吗？ | Binguner's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Binguner's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Welcome :)</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/03/Android-复盘——你真的了解-setContentView-吗？/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Binguner">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/flash_heander.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Binguner's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Android 复盘——你真的了解 setContentView 吗？
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-05-03T16:37:50+08:00">
+                2019-05-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/公众号发文/" itemprop="url" rel="index">
+                    <span itemprop="name">公众号发文</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/05/03/Android-复盘——你真的了解-setContentView-吗？/" class="leancloud_visitors" data-flag-title="Android 复盘——你真的了解 setContentView 吗？">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  从源码分析 setContentView 的执行流程
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-AppCompatDelegate-的-setContentView"><a href="#1-AppCompatDelegate-的-setContentView" class="headerlink" title="# 1. AppCompatDelegate 的 setContentView()"></a># 1. AppCompatDelegate 的 setContentView()</h1><p>分析 Android 中的 View，我们先从进入应用的看到的的一个 View 入手，第一个 View 就是 通过 setContentView() 这个方法进行加载的。我们来看 setContentView() 的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setContentView</span><span class="params">(@LayoutRes <span class="keyword">int</span> layoutResID)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.getDelegate().setContentView(layoutResID);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>AppCompatActivity 中的 setContentView() 又调用了 <code>AppCompatDelegate</code> 中的 setContentView() 方法，那 <code>AppCompatDelegate</code> 是做什么的呢？</p>
+<blockquote>
+<p>AppCompat 出现在 v7 包，它的作用是让 API 等级在 7 之上的设备也能使用 ActionBar，在 v7:21 之后，AppCompat 可以让 API 在 7 之上的设备使用 MD、ToolBar 等效果。之前的 ActionBarActivity 也被取代为 AppCompatActivity。但 AppCompatActivity 的内部回调是由 AppCompatDelegate 来实现的。</p>
+</blockquote>
+<p>AppCompatDelegate 是一个抽象类，它的实现类是 AppCompatDelegateImpl，现在看 AppCompatDelegateImpl 中的 setContentView() 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setContentView</span><span class="params">(<span class="keyword">int</span> resId)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 创建 DecorView，DecorView 是视图中的顶级 View</span></span><br><span class="line">    <span class="keyword">this</span>.ensureSubDecor();</span><br><span class="line">    <span class="comment">// 获取 DecorView 中的 content 部分</span></span><br><span class="line">    ViewGroup contentParent = (ViewGroup)<span class="keyword">this</span>.mSubDecor.findViewById(<span class="number">16908290</span>);</span><br><span class="line">    contentParent.removeAllViews();</span><br><span class="line">    <span class="comment">// 将我们编写的界面填充到 content 中</span></span><br><span class="line">    LayoutInflater.from(<span class="keyword">this</span>.mContext).inflate(resId, contentParent);</span><br><span class="line">    <span class="keyword">this</span>.mOriginalWindowCallback.onContentChanged();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="2-DecorView"><a href="#2-DecorView" class="headerlink" title="# 2. DecorView"></a># 2. DecorView</h1><p>在 AppCompatDelegateImpl 的 setContentView() 中，通过 <code>ensureSubDecor()</code> 方法为视图创建 DecorView，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureSubDecor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">this</span>.mSubDecorInstalled) &#123;</span><br><span class="line">        <span class="comment">// DecorView 不存在，调用 createSubDecor() 创建 DecorView</span></span><br><span class="line">        <span class="keyword">this</span>.mSubDecor = <span class="keyword">this</span>.createSubDecor();</span><br><span class="line">        CharSequence title = <span class="keyword">this</span>.getTitle();</span><br><span class="line">        <span class="keyword">if</span> (!TextUtils.isEmpty(title)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.mDecorContentParent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">this</span>.mDecorContentParent.setWindowTitle(title);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.peekSupportActionBar() != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">this</span>.peekSupportActionBar().setWindowTitle(title);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.mTitleView != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">this</span>.mTitleView.setText(title);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>.applyFixedSizeWindow();</span><br><span class="line">        <span class="keyword">this</span>.onSubDecorInstalled(<span class="keyword">this</span>.mSubDecor);</span><br><span class="line">        <span class="keyword">this</span>.mSubDecorInstalled = <span class="keyword">true</span>;</span><br><span class="line">        AppCompatDelegateImpl.PanelFeatureState st = <span class="keyword">this</span>.getPanelState(<span class="number">0</span>, <span class="keyword">false</span>);</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.mIsDestroyed &amp;&amp; (st == <span class="keyword">null</span> || st.menu == <span class="keyword">null</span>)) &#123;</span><br><span class="line">            <span class="keyword">this</span>.invalidatePanelMenu(<span class="number">108</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> ViewGroup <span class="title">createSubDecor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 获取设置的主题属性</span></span><br><span class="line">    TypedArray a = <span class="keyword">this</span>.mContext.obtainStyledAttributes(styleable.AppCompatTheme);</span><br><span class="line">    <span class="comment">// 如果使用的主题不是 Theme.AppCompat，或者没又继承自 Theme.AppCompat，抛出异常。</span></span><br><span class="line">    <span class="keyword">if</span> (!a.hasValue(styleable.AppCompatTheme_windowActionBar)) &#123;</span><br><span class="line">        a.recycle();</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"You need to use a Theme.AppCompat theme (or descendant) with this activity."</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 根据主题的属性进行设置</span></span><br><span class="line">        <span class="keyword">if</span> (a.getBoolean(styleable.AppCompatTheme_windowNoTitle, <span class="keyword">false</span>)) &#123;</span><br><span class="line">            <span class="comment">// 在 requestWindowFeature() 方法中</span></span><br><span class="line">            <span class="comment">// 设置 this.mWindowNoTitle = true</span></span><br><span class="line">            <span class="keyword">this</span>.requestWindowFeature(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (a.getBoolean(styleable.AppCompatTheme_windowActionBar, <span class="keyword">false</span>)) &#123;</span><br><span class="line">            <span class="keyword">this</span>.requestWindowFeature(<span class="number">108</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (a.getBoolean(styleable.AppCompatTheme_windowActionBarOverlay, <span class="keyword">false</span>)) &#123;</span><br><span class="line">            <span class="keyword">this</span>.requestWindowFeature(<span class="number">109</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (a.getBoolean(styleable.AppCompatTheme_windowActionModeOverlay, <span class="keyword">false</span>)) &#123;</span><br><span class="line">            <span class="keyword">this</span>.requestWindowFeature(<span class="number">10</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        <span class="comment">// 记录是否为浮动的主题</span></span><br><span class="line">        <span class="keyword">this</span>.mIsFloating = a.getBoolean(styleable.AppCompatTheme_android_windowIsFloating, <span class="keyword">false</span>);</span><br><span class="line">        a.recycle();</span><br><span class="line">        <span class="keyword">this</span>.mWindow.getDecorView();</span><br><span class="line">        LayoutInflater inflater = LayoutInflater.from(<span class="keyword">this</span>.mContext);</span><br><span class="line">        ViewGroup subDecor = <span class="keyword">null</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 根据不同的设置，给 subDecor 填充内容</span></span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.mWindowNoTitle) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.mIsFloating) &#123;</span><br><span class="line">                <span class="comment">// Dialog 的主题</span></span><br><span class="line">                subDecor = (ViewGroup)inflater.inflate(layout.abc_dialog_title_material, (ViewGroup)<span class="keyword">null</span>);</span><br><span class="line">                <span class="keyword">this</span>.mHasActionBar = <span class="keyword">this</span>.mOverlayActionBar = <span class="keyword">false</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.mHasActionBar) &#123;</span><br><span class="line">                <span class="comment">// 添加 ActionBar</span></span><br><span class="line">                TypedValue outValue = <span class="keyword">new</span> TypedValue();</span><br><span class="line">                <span class="keyword">this</span>.mContext.getTheme().resolveAttribute(attr.actionBarTheme, outValue, <span class="keyword">true</span>);</span><br><span class="line">                Object themedContext;</span><br><span class="line">                <span class="keyword">if</span> (outValue.resourceId != <span class="number">0</span>) &#123;</span><br><span class="line">                    themedContext = <span class="keyword">new</span> ContextThemeWrapper(<span class="keyword">this</span>.mContext, outValue.resourceId);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    themedContext = <span class="keyword">this</span>.mContext;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                subDecor = (ViewGroup)LayoutInflater.from((Context)themedContext).inflate(layout.abc_screen_toolbar, (ViewGroup)<span class="keyword">null</span>);</span><br><span class="line">                <span class="keyword">this</span>.mDecorContentParent = (DecorContentParent)subDecor.findViewById(id.decor_content_parent);</span><br><span class="line">                <span class="keyword">this</span>.mDecorContentParent.setWindowCallback(<span class="keyword">this</span>.getWindowCallback());</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">this</span>.mOverlayActionBar) &#123;</span><br><span class="line">                    <span class="keyword">this</span>.mDecorContentParent.initFeature(<span class="number">109</span>);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">this</span>.mFeatureProgress) &#123;</span><br><span class="line">                    <span class="keyword">this</span>.mDecorContentParent.initFeature(<span class="number">2</span>);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">this</span>.mFeatureIndeterminateProgress) &#123;</span><br><span class="line">                    <span class="keyword">this</span>.mDecorContentParent.initFeature(<span class="number">5</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.mOverlayActionMode) &#123;</span><br><span class="line">                subDecor = (ViewGroup)inflater.inflate(layout.abc_screen_simple_overlay_action_mode, (ViewGroup)<span class="keyword">null</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                subDecor = (ViewGroup)inflater.inflate(layout.abc_screen_simple, (ViewGroup)<span class="keyword">null</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (VERSION.SDK_INT &gt;= <span class="number">21</span>) &#123;</span><br><span class="line">                ViewCompat.setOnApplyWindowInsetsListener(subDecor, <span class="keyword">new</span> OnApplyWindowInsetsListener() &#123;</span><br><span class="line">                    <span class="function"><span class="keyword">public</span> WindowInsetsCompat <span class="title">onApplyWindowInsets</span><span class="params">(View v, WindowInsetsCompat insets)</span> </span>&#123;</span><br><span class="line">                        <span class="keyword">int</span> top = insets.getSystemWindowInsetTop();</span><br><span class="line">                        <span class="keyword">int</span> newTop = AppCompatDelegateImpl.<span class="keyword">this</span>.updateStatusGuard(top);</span><br><span class="line">                        <span class="keyword">if</span> (top != newTop) &#123;</span><br><span class="line">                            insets = insets.replaceSystemWindowInsets(insets.getSystemWindowInsetLeft(), newTop, insets.getSystemWindowInsetRight(), insets.getSystemWindowInsetBottom());</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">return</span> ViewCompat.onApplyWindowInsets(v, insets);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                ((FitWindowsViewGroup)subDecor).setOnFitSystemWindowsListener(<span class="keyword">new</span> OnFitSystemWindowsListener() &#123;</span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFitSystemWindows</span><span class="params">(Rect insets)</span> </span>&#123;</span><br><span class="line">                        insets.top = AppCompatDelegateImpl.<span class="keyword">this</span>.updateStatusGuard(insets.top);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 把 DecorView 添加到 Window 上 并且返回 DecorView</span></span><br><span class="line">        <span class="keyword">if</span> (subDecor == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"AppCompat does not support the current theme features: &#123; windowActionBar: "</span> + <span class="keyword">this</span>.mHasActionBar + <span class="string">", windowActionBarOverlay: "</span> + <span class="keyword">this</span>.mOverlayActionBar + <span class="string">", android:windowIsFloating: "</span> + <span class="keyword">this</span>.mIsFloating + <span class="string">", windowActionModeOverlay: "</span> + <span class="keyword">this</span>.mOverlayActionMode + <span class="string">", windowNoTitle: "</span> + <span class="keyword">this</span>.mWindowNoTitle + <span class="string">" &#125;"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.mDecorContentParent == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">this</span>.mTitleView = (TextView)subDecor.findViewById(id.title);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            ViewUtils.makeOptionalFitsSystemWindows(subDecor);</span><br><span class="line">            ContentFrameLayout contentView = (ContentFrameLayout)subDecor.findViewById(id.action_bar_activity_content);</span><br><span class="line">            ViewGroup windowContentView = (ViewGroup)<span class="keyword">this</span>.mWindow.findViewById(<span class="number">16908290</span>);</span><br><span class="line">            <span class="keyword">if</span> (windowContentView != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">while</span>(windowContentView.getChildCount() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    View child = windowContentView.getChildAt(<span class="number">0</span>);</span><br><span class="line">                    windowContentView.removeViewAt(<span class="number">0</span>);</span><br><span class="line">                    contentView.addView(child);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                windowContentView.setId(-<span class="number">1</span>);</span><br><span class="line">                contentView.setId(<span class="number">16908290</span>);</span><br><span class="line">                <span class="keyword">if</span> (windowContentView <span class="keyword">instanceof</span> FrameLayout) &#123;</span><br><span class="line">                    ((FrameLayout)windowContentView).setForeground((Drawable)<span class="keyword">null</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 把 DecorView 添加到 Window 上 </span></span><br><span class="line">            <span class="keyword">this</span>.mWindow.setContentView(subDecor);</span><br><span class="line">            contentView.setAttachListener(<span class="keyword">new</span> OnAttachListener() &#123;</span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAttachedFromWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDetachedFromWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    AppCompatDelegateImpl.<span class="keyword">this</span>.dismissPopups();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="keyword">return</span> subDecor;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>创建好 DecorView 之后，DecorView 会被添加到 Windows（实现类是 PhoneWindow） 中，然后返回 DecorView。<br>并且 DecorView 是视图的顶级容器，我们可以通过 Android Studio 的 Layout Inspector 来查看一个界面的 View Tree。<br><img src="https://upload-images.jianshu.io/upload_images/5264123-aa760b3978ec3d62.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="View tree"></p>
+<p>一个 DecorView 包含这一个纵向的 LinearLayout，LinearLayout 内部是一个 FrameLayout，FrameLayout 是一个包含了内容部分和标题部分的容器。</p>
+<p>在 AppCompatDelegateImpl 中的 setContentView() 方法中还有一句：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ViewGroup contentParent = (ViewGroup)<span class="keyword">this</span>.mSubDecor.findViewById(<span class="number">16908290</span>);</span><br></pre></td></tr></table></figure>
+<p>这句代码得到的 contentParent 就是刚刚创建的 DecorView 中的 <strong>内容根部局</strong>（id/content (ContentFrameLayout)）。</p>
+<p>ContentFrameLayout 是 FrameLayout 的子类，我们编写的 xml 布局就是被添加到它的内部。</p>
+<p> 然后查看为内容根布局添加视图的过程。</p>
+<h1 id="3-LayoutInflater-的-inflate"><a href="#3-LayoutInflater-的-inflate" class="headerlink" title="# 3. LayoutInflater 的 inflate()"></a># 3. LayoutInflater 的 inflate()</h1><p>inflate() 的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> View <span class="title">inflate</span><span class="params">(@LayoutRes <span class="keyword">int</span> resource, @Nullable ViewGroup root, <span class="keyword">boolean</span> attachToRoot)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Resources res = getContext().getResources();</span><br><span class="line">    <span class="keyword">if</span> (DEBUG) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"INFLATING from resource: \""</span> + res.getResourceName(resource) + <span class="string">"\" ("</span></span><br><span class="line">                + Integer.toHexString(resource) + <span class="string">")"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 获取解析当前布局 xml 文件的 parser 对象</span></span><br><span class="line">    <span class="keyword">final</span> XmlResourceParser parser = res.getLayout(resource);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 调用 inflate() 方法，开始解析 xml 文件，并返回得到界面</span></span><br><span class="line">        <span class="keyword">return</span> inflate(parser, root, attachToRoot);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        parser.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上述方法中，会先获取解析 xml 文件的 parser 对象，然后调用另一个 <code>infalte()</code> 方法进行解析。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> View <span class="title">inflate</span><span class="params">(XmlPullParser parser, @Nullable ViewGroup root, <span class="keyword">boolean</span> attachToRoot)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (mConstructorArgs) &#123;</span><br><span class="line">        Trace.traceBegin(Trace.TRACE_TAG_VIEW, <span class="string">"inflate"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> Context inflaterContext = mContext;</span><br><span class="line">        <span class="keyword">final</span> AttributeSet attrs = Xml.asAttributeSet(parser);</span><br><span class="line">        Context lastContext = (Context) mConstructorArgs[<span class="number">0</span>];</span><br><span class="line">        mConstructorArgs[<span class="number">0</span>] = inflaterContext;</span><br><span class="line">        View result = root;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 通过 while 循环遍历 xml 中的节点，直到找到 root</span></span><br><span class="line">            <span class="keyword">int</span> type;</span><br><span class="line">            <span class="keyword">while</span> ((type = parser.next()) != XmlPullParser.START_TAG &amp;&amp;</span><br><span class="line">                    type != XmlPullParser.END_DOCUMENT) &#123;</span><br><span class="line">                <span class="comment">// Empty</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (type != XmlPullParser.START_TAG) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> InflateException(parser.getPositionDescription()</span><br><span class="line">                        + <span class="string">": No start tag found!"</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">final</span> String name = parser.getName();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 如果是 merge 节点，执行 rInflate() 方法，按照层次递归的去实例化 xml 文件的子项</span></span><br><span class="line">            <span class="keyword">if</span> (TAG_MERGE.equals(name)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (root == <span class="keyword">null</span> || !attachToRoot) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> InflateException(<span class="string">"&lt;merge /&gt; can be used only with a valid "</span></span><br><span class="line">                            + <span class="string">"ViewGroup root and attachToRoot=true"</span>);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                rInflate(parser, root, inflaterContext, attrs, <span class="keyword">false</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// Temp is the root view that was found in the xml</span></span><br><span class="line">                <span class="comment">// 不是 merge 节点，就通过 tag 标签创建一个 view</span></span><br><span class="line">                <span class="keyword">final</span> View temp = createViewFromTag(root, name, inflaterContext, attrs);</span><br><span class="line"></span><br><span class="line">                ViewGroup.LayoutParams params = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (root != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="comment">// Create layout params that match root, if supplied</span></span><br><span class="line">                    params = root.generateLayoutParams(attrs);</span><br><span class="line">                    <span class="keyword">if</span> (!attachToRoot) &#123;</span><br><span class="line">                        <span class="comment">// Set the layout params for temp if we are not</span></span><br><span class="line">                        <span class="comment">// attaching. (If we are, we use addView, below)</span></span><br><span class="line">                        temp.setLayoutParams(params);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Inflate all children under temp against its context.</span></span><br><span class="line">                rInflateChildren(parser, temp, attrs, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// We are supposed to attach all the views we found (int temp)</span></span><br><span class="line">                <span class="comment">// to root. Do that now.</span></span><br><span class="line">                <span class="comment">// 将创建的 View 添加到 root 视图中</span></span><br><span class="line">                <span class="keyword">if</span> (root != <span class="keyword">null</span> &amp;&amp; attachToRoot) &#123;</span><br><span class="line">                    root.addView(temp, params);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Decide whether to return the root that was passed in or the</span></span><br><span class="line">                <span class="comment">// top view found in xml.</span></span><br><span class="line">                <span class="keyword">if</span> (root == <span class="keyword">null</span> || !attachToRoot) &#123;</span><br><span class="line">                    result = temp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (XmlPullParserException e) &#123;</span><br><span class="line">            <span class="keyword">final</span> InflateException ie = <span class="keyword">new</span> InflateException(e.getMessage(), e);</span><br><span class="line">            ie.setStackTrace(EMPTY_STACK_TRACE);</span><br><span class="line">            <span class="keyword">throw</span> ie;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="keyword">final</span> InflateException ie = <span class="keyword">new</span> InflateException(parser.getPositionDescription()</span><br><span class="line">                    + <span class="string">": "</span> + e.getMessage(), e);</span><br><span class="line">            ie.setStackTrace(EMPTY_STACK_TRACE);</span><br><span class="line">            <span class="keyword">throw</span> ie;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="comment">// Don't retain static reference on context.</span></span><br><span class="line">            mConstructorArgs[<span class="number">0</span>] = lastContext;</span><br><span class="line">            mConstructorArgs[<span class="number">1</span>] = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">            Trace.traceEnd(Trace.TRACE_TAG_VIEW);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个 <code>inflate()</code> 方法中，会先寻找 xml 文件中的起始节点，如果起始节点是 <code>merge</code>，就执行 <code>rInflate()</code> 方法，如果不是 merge，就执行 <code>createViewFromTag()</code> 方法去创建一个新的 View，最后把 View 添加到内容根部局中。</p>
+<h1 id="4-createViewFromTag"><a href="#4-createViewFromTag" class="headerlink" title="# 4. createViewFromTag()"></a># 4. createViewFromTag()</h1><p>现在看 createViewFromTag() 的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">View <span class="title">createViewFromTag</span><span class="params">(View parent, String name, Context context, AttributeSet attrs,</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="keyword">boolean</span> ignoreThemeAttr)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (name.equals(<span class="string">"view"</span>)) &#123;</span><br><span class="line">        name = attrs.getAttributeValue(<span class="keyword">null</span>, <span class="string">"class"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Apply a theme wrapper, if allowed and one is specified.</span></span><br><span class="line">    <span class="keyword">if</span> (!ignoreThemeAttr) &#123;</span><br><span class="line">        <span class="keyword">final</span> TypedArray ta = context.obtainStyledAttributes(attrs, ATTRS_THEME);</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> themeResId = ta.getResourceId(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">if</span> (themeResId != <span class="number">0</span>) &#123;</span><br><span class="line">            context = <span class="keyword">new</span> ContextThemeWrapper(context, themeResId);</span><br><span class="line">        &#125;</span><br><span class="line">        ta.recycle();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果 name 的值为 blink，返回一个 BlinkLayout</span></span><br><span class="line">    <span class="keyword">if</span> (name.equals(TAG_1995)) &#123;</span><br><span class="line">        <span class="comment">// Let's party like it's 1995!</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BlinkLayout(context, attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        View view;</span><br><span class="line">        <span class="comment">// 依次寻找合适的 Factory 对象去创建 View</span></span><br><span class="line">        <span class="keyword">if</span> (mFactory2 != <span class="keyword">null</span>) &#123;</span><br><span class="line">            view = mFactory2.onCreateView(parent, name, context, attrs);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mFactory != <span class="keyword">null</span>) &#123;</span><br><span class="line">            view = mFactory.onCreateView(name, context, attrs);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            view = <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (view == <span class="keyword">null</span> &amp;&amp; mPrivateFactory != <span class="keyword">null</span>) &#123;</span><br><span class="line">            view = mPrivateFactory.onCreateView(parent, name, context, attrs);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (view == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">final</span> Object lastContext = mConstructorArgs[<span class="number">0</span>];</span><br><span class="line">            mConstructorArgs[<span class="number">0</span>] = context;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (-<span class="number">1</span> == name.indexOf(<span class="string">'.'</span>)) &#123;</span><br><span class="line">                    view = onCreateView(parent, name, attrs);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    view = createView(name, <span class="keyword">null</span>, attrs);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                mConstructorArgs[<span class="number">0</span>] = lastContext;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> view;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InflateException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> e;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">        <span class="keyword">final</span> InflateException ie = <span class="keyword">new</span> InflateException(attrs.getPositionDescription()</span><br><span class="line">                + <span class="string">": Error inflating class "</span> + name, e);</span><br><span class="line">        ie.setStackTrace(EMPTY_STACK_TRACE);</span><br><span class="line">        <span class="keyword">throw</span> ie;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="keyword">final</span> InflateException ie = <span class="keyword">new</span> InflateException(attrs.getPositionDescription()</span><br><span class="line">                + <span class="string">": Error inflating class "</span> + name, e);</span><br><span class="line">        ie.setStackTrace(EMPTY_STACK_TRACE);</span><br><span class="line">        <span class="keyword">throw</span> ie;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们看一看代码中的 <code>mFactory2</code>、<code>mFactory</code>、<code>mPrivateFactory</code> 是什么。</p>
+<p>在 LayoutInflater.java 的属性中，有如下几个变量：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Factory mFactory;</span><br><span class="line"><span class="keyword">private</span> Factory2 mFactory2;</span><br><span class="line"><span class="keyword">private</span> Factory2 mPrivateFactory;</span><br></pre></td></tr></table></figure>
+<p><code>Factory</code> 是一个接口，Factory2 是继承了 Factory 的接口，它们都有个一个 onCreateView() 的方法。</p>
+<h1 id="5-onCreateView"><a href="#5-onCreateView" class="headerlink" title="# 5. onCreateView()"></a># 5. onCreateView()</h1><p>我们去看它们在 AppCompatDelegateImpl 中的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> View <span class="title">createView</span><span class="params">(View parent, String name, @NonNull Context context, @NonNull AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.mAppCompatViewInflater == <span class="keyword">null</span>) &#123;</span><br><span class="line">        TypedArray a = <span class="keyword">this</span>.mContext.obtainStyledAttributes(styleable.AppCompatTheme);</span><br><span class="line">        String viewInflaterClassName = a.getString(styleable.AppCompatTheme_viewInflaterClass);</span><br><span class="line">        <span class="keyword">if</span> (viewInflaterClassName != <span class="keyword">null</span> &amp;&amp; !AppCompatViewInflater.class.getName().equals(viewInflaterClassName)) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Class viewInflaterClass = Class.forName(viewInflaterClassName);</span><br><span class="line">                <span class="keyword">this</span>.mAppCompatViewInflater = (AppCompatViewInflater)viewInflaterClass.getDeclaredConstructor().newInstance();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Throwable var8) &#123;</span><br><span class="line">                Log.i(<span class="string">"AppCompatDelegate"</span>, <span class="string">"Failed to instantiate custom view inflater "</span> + viewInflaterClassName + <span class="string">". Falling back to default."</span>, var8);</span><br><span class="line">                <span class="keyword">this</span>.mAppCompatViewInflater = <span class="keyword">new</span> AppCompatViewInflater();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">this</span>.mAppCompatViewInflater = <span class="keyword">new</span> AppCompatViewInflater();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">boolean</span> inheritContext = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (IS_PRE_LOLLIPOP) &#123;</span><br><span class="line">        inheritContext = attrs <span class="keyword">instanceof</span> XmlPullParser ? ((XmlPullParser)attrs).getDepth() &gt; <span class="number">1</span> : <span class="keyword">this</span>.shouldInheritContext((ViewParent)parent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.mAppCompatViewInflater.createView(parent, name, context, attrs, inheritContext, IS_PRE_LOLLIPOP, <span class="keyword">true</span>, VectorEnabledTintResources.shouldBeUsed());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>方法的最后可以看出创建视图的工作交给了 AppCompatViewInflater 的 <code>createView()</code> 去完成</p>
+<h1 id="6-createView"><a href="#6-createView" class="headerlink" title="# 6. createView()"></a># 6. createView()</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> View <span class="title">createView</span><span class="params">(View parent, String name, @NonNull Context context, @NonNull AttributeSet attrs, <span class="keyword">boolean</span> inheritContext, <span class="keyword">boolean</span> readAndroidTheme, <span class="keyword">boolean</span> readAppTheme, <span class="keyword">boolean</span> wrapContext)</span> </span>&#123;</span><br><span class="line">    Context originalContext = context;</span><br><span class="line">    <span class="keyword">if</span> (inheritContext &amp;&amp; parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">        context = parent.getContext();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (readAndroidTheme || readAppTheme) &#123;</span><br><span class="line">        context = themifyContext(context, attrs, readAndroidTheme, readAppTheme);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (wrapContext) &#123;</span><br><span class="line">        context = TintContextWrapper.wrap(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    View view = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">byte</span> var12 = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">switch</span>(name.hashCode()) &#123;</span><br><span class="line">    <span class="keyword">case</span> -<span class="number">1946472170</span>:</span><br><span class="line">        <span class="keyword">if</span> (name.equals(<span class="string">"RatingBar"</span>)) &#123;</span><br><span class="line">            var12 = <span class="number">11</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> -<span class="number">1455429095</span>:</span><br><span class="line">        <span class="keyword">if</span> (name.equals(<span class="string">"CheckedTextView"</span>)) &#123;</span><br><span class="line">            var12 = <span class="number">8</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> -<span class="number">1346021293</span>:</span><br><span class="line">        <span class="keyword">if</span> (name.equals(<span class="string">"MultiAutoCompleteTextView"</span>)) &#123;</span><br><span class="line">            var12 = <span class="number">10</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> -<span class="number">938935918</span>:</span><br><span class="line">        <span class="keyword">if</span> (name.equals(<span class="string">"TextView"</span>)) &#123;</span><br><span class="line">            var12 = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> -<span class="number">937446323</span>:</span><br><span class="line">        <span class="keyword">if</span> (name.equals(<span class="string">"ImageButton"</span>)) &#123;</span><br><span class="line">            var12 = <span class="number">5</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> -<span class="number">658531749</span>:</span><br><span class="line">        <span class="keyword">if</span> (name.equals(<span class="string">"SeekBar"</span>)) &#123;</span><br><span class="line">            var12 = <span class="number">12</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> -<span class="number">339785223</span>:</span><br><span class="line">        <span class="keyword">if</span> (name.equals(<span class="string">"Spinner"</span>)) &#123;</span><br><span class="line">            var12 = <span class="number">4</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">776382189</span>:</span><br><span class="line">        <span class="keyword">if</span> (name.equals(<span class="string">"RadioButton"</span>)) &#123;</span><br><span class="line">            var12 = <span class="number">7</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1125864064</span>:</span><br><span class="line">        <span class="keyword">if</span> (name.equals(<span class="string">"ImageView"</span>)) &#123;</span><br><span class="line">            var12 = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1413872058</span>:</span><br><span class="line">        <span class="keyword">if</span> (name.equals(<span class="string">"AutoCompleteTextView"</span>)) &#123;</span><br><span class="line">            var12 = <span class="number">9</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1601505219</span>:</span><br><span class="line">        <span class="keyword">if</span> (name.equals(<span class="string">"CheckBox"</span>)) &#123;</span><br><span class="line">            var12 = <span class="number">6</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1666676343</span>:</span><br><span class="line">        <span class="keyword">if</span> (name.equals(<span class="string">"EditText"</span>)) &#123;</span><br><span class="line">            var12 = <span class="number">3</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">2001146706</span>:</span><br><span class="line">        <span class="keyword">if</span> (name.equals(<span class="string">"Button"</span>)) &#123;</span><br><span class="line">            var12 = <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">switch</span>(var12) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">        view = <span class="keyword">this</span>.createTextView(context, attrs);</span><br><span class="line">        <span class="keyword">this</span>.verifyNotNull((View)view, name);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">        view = <span class="keyword">this</span>.createImageView(context, attrs);</span><br><span class="line">        <span class="keyword">this</span>.verifyNotNull((View)view, name);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">        view = <span class="keyword">this</span>.createButton(context, attrs);</span><br><span class="line">        <span class="keyword">this</span>.verifyNotNull((View)view, name);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">        view = <span class="keyword">this</span>.createEditText(context, attrs);</span><br><span class="line">        <span class="keyword">this</span>.verifyNotNull((View)view, name);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">        view = <span class="keyword">this</span>.createSpinner(context, attrs);</span><br><span class="line">        <span class="keyword">this</span>.verifyNotNull((View)view, name);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">        view = <span class="keyword">this</span>.createImageButton(context, attrs);</span><br><span class="line">        <span class="keyword">this</span>.verifyNotNull((View)view, name);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">        view = <span class="keyword">this</span>.createCheckBox(context, attrs);</span><br><span class="line">        <span class="keyword">this</span>.verifyNotNull((View)view, name);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">7</span>:</span><br><span class="line">        view = <span class="keyword">this</span>.createRadioButton(context, attrs);</span><br><span class="line">        <span class="keyword">this</span>.verifyNotNull((View)view, name);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">8</span>:</span><br><span class="line">        view = <span class="keyword">this</span>.createCheckedTextView(context, attrs);</span><br><span class="line">        <span class="keyword">this</span>.verifyNotNull((View)view, name);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">9</span>:</span><br><span class="line">        view = <span class="keyword">this</span>.createAutoCompleteTextView(context, attrs);</span><br><span class="line">        <span class="keyword">this</span>.verifyNotNull((View)view, name);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">10</span>:</span><br><span class="line">        view = <span class="keyword">this</span>.createMultiAutoCompleteTextView(context, attrs);</span><br><span class="line">        <span class="keyword">this</span>.verifyNotNull((View)view, name);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">11</span>:</span><br><span class="line">        view = <span class="keyword">this</span>.createRatingBar(context, attrs);</span><br><span class="line">        <span class="keyword">this</span>.verifyNotNull((View)view, name);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">12</span>:</span><br><span class="line">        view = <span class="keyword">this</span>.createSeekBar(context, attrs);</span><br><span class="line">        <span class="keyword">this</span>.verifyNotNull((View)view, name);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        view = <span class="keyword">this</span>.createView(context, name, attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (view == <span class="keyword">null</span> &amp;&amp; originalContext != context) &#123;</span><br><span class="line">        view = <span class="keyword">this</span>.createViewFromTag(context, name, attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (view != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>.checkOnClickListener((View)view, attrs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (View)view;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过 createTextView() 等源码可以发现，creatView() 方法把常用的组件都变成了 <code>AppCompat</code> 的类型，从而达到了兼容的目的。</p>
+<p>至此，setContentView() 的流程就走完了。但是添加好布局文件之后，视图并不会显示到界面上，还需要通过 WindowsManagerService 去渲染界面才能使界面显示。这部分到内容在后面会讲到。</p>
+<p>零碎的东西很多，为了方便大家记忆，我把上面的内容做成了思维导图，需要的朋友可以保存下来，偶尔看一下，帮助自己记忆。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5264123-695d524910fba82a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="未命名.png"></p>
+<p>欢迎关注本文作者：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5264123-1bbcc050b0bdb63c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="setContentView() 的流程"></p>
+<p>扫码关注并回复「干货」，获取我整理的千G Android、iOS、JavaWeb、大数据、人工智能等学习资源。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/25/Android-复盘——帮你彻底了解消息机制/" rel="next" title="Android 复盘——帮你彻底了解消息机制">
+                <i class="fa fa-chevron-left"></i> Android 复盘——帮你彻底了解消息机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjYwOC85MTY5"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/flash_heander.png"
+               alt="Binguner" />
+          <p class="site-author-name" itemprop="name">Binguner</p>
+           
+              <p class="site-description motion-element" itemprop="description">I can't go on, I will go on.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Nenguou" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/7ac4634329c3" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-book"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/babyzzs?is_hot=1" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/nenguou/" target="_blank" title="Instgram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instgram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/nenguou04/" target="_blank" title="CSDN">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-AppCompatDelegate-的-setContentView"><span class="nav-number">1.</span> <span class="nav-text"># 1. AppCompatDelegate 的 setContentView()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-DecorView"><span class="nav-number">2.</span> <span class="nav-text"># 2. DecorView</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-LayoutInflater-的-inflate"><span class="nav-number">3.</span> <span class="nav-text"># 3. LayoutInflater 的 inflate()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-createViewFromTag"><span class="nav-number">4.</span> <span class="nav-text"># 4. createViewFromTag()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-onCreateView"><span class="nav-number">5.</span> <span class="nav-text"># 5. onCreateView()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-createView"><span class="nav-number">6.</span> <span class="nav-text"># 6. createView()</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Binguner</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("XEsyf2VW631h7oC9pp8YgIqx-gzGzoHsz", "fgXU53MWdplW2nkVyOJHws9H");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
