@@ -1,0 +1,990 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Android Studio 中 NDK 环境的搭建">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手把手教你搭建 NDK 环境搭建">
+<meta property="og:url" content="http://yoursite.com/2019/08/13/手把手教你搭建-NDK-环境搭建/index.html">
+<meta property="og:site_name" content="Binguner&#39;s Blog">
+<meta property="og:description" content="Android Studio 中 NDK 环境的搭建">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5264123-5cfdd0fbcde881e3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5264123-74c3c6bde540cb94.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5264123-97039eae76b97692.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5264123-2a57829b31f86c0d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5264123-a1284b2b9a22c46e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5264123-d471ffbc041a029c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5264123-99343c2fce15266c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5264123-1bbcc050b0bdb63c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-08-13T05:59:23.677Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="手把手教你搭建 NDK 环境搭建">
+<meta name="twitter:description" content="Android Studio 中 NDK 环境的搭建">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/5264123-5cfdd0fbcde881e3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/08/13/手把手教你搭建-NDK-环境搭建/"/>
+
+
+
+
+
+  <title> 手把手教你搭建 NDK 环境搭建 | Binguner's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Binguner's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Welcome :)</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/13/手把手教你搭建-NDK-环境搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Binguner">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/flash_heander.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Binguner's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                手把手教你搭建 NDK 环境搭建
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-13T13:57:46+08:00">
+                2019-08-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/公众号发文/" itemprop="url" rel="index">
+                    <span itemprop="name">公众号发文</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/08/13/手把手教你搭建-NDK-环境搭建/" class="leancloud_visitors" data-flag-title="手把手教你搭建 NDK 环境搭建">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  Android Studio 中 NDK 环境的搭建
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>本文基于 Android Studio 3.4.2 、gradle:3.2.1</p>
+</blockquote>
+<h1 id="1、什么是-JNI、NDK？"><a href="#1、什么是-JNI、NDK？" class="headerlink" title="1、什么是 JNI、NDK？"></a>1、什么是 JNI、NDK？</h1><p>JNI 是 Java Native Interface （Java 本地接口）的缩写，是 Java 与其他语言通信的桥梁。在 Android 中的应用主要为：音视频开发、热修复、插件化、逆向开发和系统源码调用，为了方便使用 JNI 技术，Android 提供了 NDK 工具集合，它和 JNI 开发本质上没有区别，NDK 是在 Android 中实现 JNI 的手段，</p>
+<h5 id="NDK-有两个主要作用："><a href="#NDK-有两个主要作用：" class="headerlink" title="NDK 有两个主要作用："></a>NDK 有两个主要作用：</h5><ul>
+<li><p>帮助开发者快速开发 C/C++ 的动态库</p>
+</li>
+<li><p>NDK 使用了交叉编译器，可以在一个平台上开发出另一个平台的二进制代码</p>
+</li>
+</ul>
+<h1 id="2、Android-中-NDK-的使用"><a href="#2、Android-中-NDK-的使用" class="headerlink" title="2、Android 中 NDK 的使用"></a>2、Android 中 NDK 的使用</h1><h6 id="1）首先下载-NDK-的安装包"><a href="#1）首先下载-NDK-的安装包" class="headerlink" title="1）首先下载 NDK 的安装包"></a>1）首先下载 NDK 的安装包</h6><p>在 SDK Tools 里下载 NDK、LLDB、CMake</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5264123-5cfdd0fbcde881e3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="下载 NDK、LLDB、CMake"></p>
+<ul>
+<li><p>NDK : 即我们需要下载的工具，会生成到 SDK 根目录下的 ndk-bundle 目录下</p>
+</li>
+<li><p>CMake : 一个跨平台的编译构建工具，可以用简单的语句来描述所有平台的安装过程</p>
+</li>
+<li><p>LLDB : 一个高效的 C/C++ 的调试工具</p>
+</li>
+</ul>
+<h6 id="2）编写界面"><a href="#2）编写界面" class="headerlink" title="2）编写界面"></a>2）编写界面</h6><p>这里的界面很简单，一个 TextView 和一个 Button ，点击 Button 后调用 JNI 的方法修改 TextView 的值。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">android.support.constraint.ConstraintLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:app</span>=<span class="string">"http://schemas.android.com/apk/res-auto"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:context</span>=<span class="string">".JNIDemo.JNIActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/jni_tv"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_marginTop</span>=<span class="string">"20dp"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"I'm a TextView"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">android:textAllCaps</span>=<span class="string">"false"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/jni_btn"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="string">"@id/jni_tv"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_marginTop</span>=<span class="string">"20dp"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="string">"parent"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"Call Method From JNI"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag"></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">android.support.constraint.ConstraintLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h6 id="3）编写-Activity-代码"><a href="#3）编写-Activity-代码" class="headerlink" title="3）编写 Activity 代码"></a>3）编写 Activity 代码</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">* Copyright (c) 2019\. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">* Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">* Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">* Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*                                              Vestibulum commodo. Ut rhoncus gravida arcu.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> com.learnandroid.learn_android.JNIDemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.widget.Button;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.widget.TextView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.widget.Toast;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.learnandroid.learn_android.R;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JNIActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TextView jni_tv;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Button jni_btn;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line"></span><br><span class="line">        setContentView(R.layout.activity_jni);</span><br><span class="line"></span><br><span class="line">        jni_tv = findViewById(R.id.jni_tv);</span><br><span class="line"></span><br><span class="line">        jni_btn = findViewById(R.id.jni_btn);</span><br><span class="line"></span><br><span class="line">        jni_btn.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">                jni_tv.setText(JNIUtils.sayHelloFromJNI());</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="4）编写-JNIUtils"><a href="#4）编写-JNIUtils" class="headerlink" title="4）编写 JNIUtils"></a>4）编写 JNIUtils</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learnandroid.learn_android.JNIDemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JNIUtils</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line"></span><br><span class="line">        System.loadLibrary(<span class="string">"MyJNIHello"</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">native</span> String <span class="title">sayHelloFromJNI</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的静态代码块中首先加载了需要使用的动态库，然后创建 native 方法。</p>
+<h6 id="5）生成头文件"><a href="#5）生成头文件" class="headerlink" title="5）生成头文件"></a>5）生成头文件</h6><p>在 Android Studio 的 Terminal 中，cd 到当前项目的根目录，然后执行 javah 命令</p>
+<p>（注意将含有本地方法的类写完整的包名）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> binguner @ binguner <span class="keyword">in</span> ~/AndroidStudioProjects/learn_android/app/src/main/java [10:12:17]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> javah -d ../cpp com.learnandroid.learn_android.JNIDemo.JNIUtils</span></span><br></pre></td></tr></table></figure></p>
+<p>-d ../cpp 指定了头文件的生成位置：当前目录上一级下的 cpp 文件夹中。</p>
+<p>然后打开 Project 目录下的 com_learnandroid_learn_android_JNIDemo_JNIUtils.h 可以看到它为我们生成的方法原型<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* DO NOT EDIT THIS FILE - it is machine generated */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;jni.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Header for class com_learnandroid_learn_android_JNIDemo_JNIUtils */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _Included_com_learnandroid_learn_android_JNIDemo_JNIUtils</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _Included_com_learnandroid_learn_android_JNIDemo_JNIUtils</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> &#123;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">* Class:     com_learnandroid_learn_android_JNIDemo_JNIUtils</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">* Method:    sayHelloFromJNI</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">* Signature: ()Ljava/lang/String;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line">JNIEXPORT jstring JNICALL Java_com_learnandroid_learn_1android_JNIDemo_JNIUtils_sayHelloFromJNI</span><br><span class="line"></span><br><span class="line">  (JNIEnv *, jclass);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure></p>
+<h6 id="6）实现-C-代码"><a href="#6）实现-C-代码" class="headerlink" title="6）实现 C++ 代码"></a>6）实现 C++ 代码</h6><p>在 cpp 目录下新建一个 C++ 文件，命名为 MyJNIDemo</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5264123-74c3c6bde540cb94.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="新建 C++ 文件"></p>
+<p>这时候如果直接在 C++ 文件里编写代码，是没有代码提示的，这时候需要用 CMake 工具。</p>
+<p>首先编辑 app 的 build.gradle 文件，添加如下内容</p>
+<p>android -&gt; defaultConfig 下添加<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用Cmake工具</span></span><br><span class="line"></span><br><span class="line">externalNativeBuild &#123;</span><br><span class="line"></span><br><span class="line">    cmake &#123;</span><br><span class="line"></span><br><span class="line">        cppFlags <span class="string">""</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//生成多个版本的so文件，指定需要编译的cpu架构</span></span><br><span class="line"></span><br><span class="line">        abiFilters <span class="string">"armeabi-v7a"</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>android -&gt; 下添加<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 配置CMakeLists.txt路径</span></span><br><span class="line"></span><br><span class="line">externalNativeBuild &#123;</span><br><span class="line"></span><br><span class="line">    cmake &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//编译后so文件的名字</span></span><br><span class="line"></span><br><span class="line">        **path <span class="string">"src/main/cpp/CMakeLists.txt"</span>**</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>再编辑 <strong>CMakeLists.txt</strong> 文件（cmake脚本配置文件，cmake会根据该脚本文件中的指令去编译相关的C/C++源文件，并将编译后产物生成共享库或静态块，然后Gradle将其打包到APK中）</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"># 设置 CMake 的最低版本</span><br><span class="line"></span><br><span class="line">cmake_minimum_required(VERSION <span class="number">3.4</span>.<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"># 第一个参数：创建并命名一个 lib，会自动生成这个 lib 的 so 库，</span><br><span class="line"></span><br><span class="line"># 第二个参数：将它设置为 <span class="keyword">STATIC</span> （静态库，以 .a 结尾）或者 SHARED（动态库以 .so 结尾），</span><br><span class="line"></span><br><span class="line"># 最后一个参：数提供一个相对的源码路径</span><br><span class="line"></span><br><span class="line"># 可以用 add_library 设置多个 lib，CMake 会自动构建并把 lib 包打包到 apk 中。</span><br><span class="line"></span><br><span class="line">add_library( # Sets the name of the library.</span><br><span class="line"></span><br><span class="line">        MyJNIHello</span><br><span class="line"></span><br><span class="line">        # Sets the library as a shared library.</span><br><span class="line"></span><br><span class="line">        SHARED</span><br><span class="line"></span><br><span class="line">        # Provides a relative path to your <span class="keyword">source</span> <span class="keyword">file</span>(s).</span><br><span class="line"></span><br><span class="line">        MyJNIHello.cpp</span><br><span class="line"></span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line"># 搜索一个预置的 lib，并把它的路径保存为一个变量</span><br><span class="line"></span><br><span class="line"># CMake 默认在搜索路径中包含了系统的 lib，我们只需要给想要添加的 NDK lib 设置一个名称即可。</span><br><span class="line"></span><br><span class="line"># CMake 会在完成构建之间检查它是否存在</span><br><span class="line"></span><br><span class="line">find_library( # Sets the name of the path variable.</span><br><span class="line"></span><br><span class="line">        log-lib</span><br><span class="line"></span><br><span class="line">        # Specifies the name of the NDK library that</span><br><span class="line"></span><br><span class="line">        # you want CMake to locate.</span><br><span class="line"></span><br><span class="line">        log)</span><br><span class="line"></span><br><span class="line"># 将指定的库关联起来</span><br><span class="line"></span><br><span class="line">target_link_libraries( # Specifies the target library.</span><br><span class="line"></span><br><span class="line">        MyJNIHello</span><br><span class="line"></span><br><span class="line">        # Links the target library to the log library</span><br><span class="line"></span><br><span class="line">        # included in the NDK.</span><br><span class="line"></span><br><span class="line">        $&#123;log-lib&#125;</span><br><span class="line"></span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+<p>这时候点击 Sync Now，编写 C++ 文件有代码提示了</p>
+<p>C++ 的代码如下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Created by Binguner on 2019-08-13.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;jni.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//#include "com_learnandroid_learn_android_JNIDemo_JNIUtils.h"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span></span><br><span class="line"></span><br><span class="line">JNIEXPORT jstring JNICALL</span><br><span class="line"></span><br><span class="line">Java_com_learnandroid_learn_1android_JNIDemo_JNIUtils_sayHelloFromJNI</span><br><span class="line"></span><br><span class="line">        (JNIEnv *env, jclass jclass1) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> env-&gt;NewStringUTF(<span class="string">"JNIHELLO"</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里实现了 <code>Java_com_learnandroid_learn_1android_JNIDemo_JNIUtils_sayHelloFromJNI</code> 方法，并返回了一个 「JNIHELLO」的字符串，<br>我为什么注释掉 <code>#include &quot;com_learnandroid_learn_android_JNIDemo_JNIUtils.h”</code> 呢？</p>
+<p>因为 JNI 生成的头文件目的是帮助我们得到 native 方法的原型，自己写原型容易的话命名可能出错，你也可以看到这个方法的名称非常复杂。但是如果我们能自己写对这个名字，不用 include 这个头文件也可以，CMake 会我们自动生成这个方法。</p>
+<p>比如我又在 JNIUtils 中添加了一个 test1() 的方法</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5264123-97039eae76b97692.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="新建 native 方法"></p>
+<p>点击代码提示之后，它会自动在 C++ 代码中生成相应的方法，我们只要实现其中的方法即可</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5264123-2a57829b31f86c0d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="自动创建方法"></p>
+<p>7）运行 App</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5264123-a1284b2b9a22c46e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="未点击按钮"></p>
+<p> 点击按钮后 <img src="https://upload-images.jianshu.io/upload_images/5264123-d471ffbc041a029c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="点击按钮"></p>
+<p>8）JNI 中打印日志</p>
+<p>在 C++ 文件中添加如下内容：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Created by Binguner on 2019-08-13.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;android/log.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;jni.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//#include "com_learnandroid_learn_android_JNIDemo_JNIUtils.h"</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LOG_TAG <span class="meta-string">"System.out.c"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LOGW(...) __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span></span><br><span class="line"></span><br><span class="line">JNIEXPORT jstring JNICALL</span><br><span class="line"></span><br><span class="line">Java_com_learnandroid_learn_1android_JNIDemo_JNIUtils_sayHelloFromJNI</span><br><span class="line"></span><br><span class="line">        (JNIEnv *env, jclass jclass1) &#123;</span><br><span class="line"></span><br><span class="line">    LOGD(<span class="string">"TAGD,a=%d,b=%d"</span>,<span class="number">1</span>,<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> env-&gt;NewStringUTF(<span class="string">"JNIHELLO"</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://upload-images.jianshu.io/upload_images/5264123-99343c2fce15266c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="运行效果"></p>
+<p>欢迎关注本文作者：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5264123-1bbcc050b0bdb63c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>扫码关注并回复「干货」，获取我整理的千G Android、iOS、JavaWeb、大数据、人工智能等学习资源。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/03/Android-复盘——你真的了解-setContentView-吗？/" rel="next" title="Android 复盘——你真的了解 setContentView 吗？">
+                <i class="fa fa-chevron-left"></i> Android 复盘——你真的了解 setContentView 吗？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjYwOC85MTY5"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/flash_heander.png"
+               alt="Binguner" />
+          <p class="site-author-name" itemprop="name">Binguner</p>
+           
+              <p class="site-description motion-element" itemprop="description">I can't go on, I will go on.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Nenguou" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/7ac4634329c3" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-book"></i>
+                  
+                  简书
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/babyzzs?is_hot=1" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/nenguou/" target="_blank" title="Instgram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instgram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://blog.csdn.net/nenguou04/" target="_blank" title="CSDN">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  CSDN
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、什么是-JNI、NDK？"><span class="nav-number">1.</span> <span class="nav-text">1、什么是 JNI、NDK？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#NDK-有两个主要作用："><span class="nav-number">1.0.0.0.1.</span> <span class="nav-text">NDK 有两个主要作用：</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、Android-中-NDK-的使用"><span class="nav-number">2.</span> <span class="nav-text">2、Android 中 NDK 的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1）首先下载-NDK-的安装包"><span class="nav-number">2.0.0.0.0.1.</span> <span class="nav-text">1）首先下载 NDK 的安装包</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2）编写界面"><span class="nav-number">2.0.0.0.0.2.</span> <span class="nav-text">2）编写界面</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3）编写-Activity-代码"><span class="nav-number">2.0.0.0.0.3.</span> <span class="nav-text">3）编写 Activity 代码</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#4）编写-JNIUtils"><span class="nav-number">2.0.0.0.0.4.</span> <span class="nav-text">4）编写 JNIUtils</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#5）生成头文件"><span class="nav-number">2.0.0.0.0.5.</span> <span class="nav-text">5）生成头文件</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6）实现-C-代码"><span class="nav-number">2.0.0.0.0.6.</span> <span class="nav-text">6）实现 C++ 代码</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Binguner</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("XEsyf2VW631h7oC9pp8YgIqx-gzGzoHsz", "fgXU53MWdplW2nkVyOJHws9H");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
